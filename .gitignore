@@ -1,0 +1,7 @@
+.git/*
+obj/*
+*~
+.project/*
+.settings/*
+.cproject
+.project
