@@ -50,10 +50,75 @@ namespace PowerSupply_701C_ns
 //		Attributes Allowed Methods
 //=================================================
 
+//--------------------------------------------------------
+/**
+ *	Method      : PowerSupply_701C::is_Voltage_allowed()
+ *	Description : Execution allowed for Voltage attribute
+ */
+//--------------------------------------------------------
+bool PowerSupply_701C::is_Voltage_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+	//	Not any excluded states for Voltage attribute in Write access.
+	/*----- PROTECTED REGION ID(PowerSupply_701C::VoltageStateAllowed_WRITE) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::VoltageStateAllowed_WRITE
+
+	//	Not any excluded states for Voltage attribute in read access.
+	/*----- PROTECTED REGION ID(PowerSupply_701C::VoltageStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::VoltageStateAllowed_READ
+	return true;
+}
+
 
 //=================================================
 //		Commands Allowed Methods
 //=================================================
+
+//--------------------------------------------------------
+/**
+ *	Method      : PowerSupply_701C::is_ChargingOn_allowed()
+ *	Description : Execution allowed for ChargingOn attribute
+ */
+//--------------------------------------------------------
+bool PowerSupply_701C::is_ChargingOn_allowed(TANGO_UNUSED(const CORBA::Any &any))
+{
+	//	Not any excluded states for ChargingOn command.
+	/*----- PROTECTED REGION ID(PowerSupply_701C::ChargingOnStateAllowed) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::ChargingOnStateAllowed
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : PowerSupply_701C::is_ChargingOff_allowed()
+ *	Description : Execution allowed for ChargingOff attribute
+ */
+//--------------------------------------------------------
+bool PowerSupply_701C::is_ChargingOff_allowed(TANGO_UNUSED(const CORBA::Any &any))
+{
+	//	Not any excluded states for ChargingOff command.
+	/*----- PROTECTED REGION ID(PowerSupply_701C::ChargingOffStateAllowed) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::ChargingOffStateAllowed
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : PowerSupply_701C::is_SetVoltage_allowed()
+ *	Description : Execution allowed for SetVoltage attribute
+ */
+//--------------------------------------------------------
+bool PowerSupply_701C::is_SetVoltage_allowed(TANGO_UNUSED(const CORBA::Any &any))
+{
+	//	Not any excluded states for SetVoltage command.
+	/*----- PROTECTED REGION ID(PowerSupply_701C::SetVoltageStateAllowed) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::SetVoltageStateAllowed
+	return true;
+}
 
 
 /*----- PROTECTED REGION ID(PowerSupply_701C::PowerSupply_701CStateAllowed.AdditionalMethods) ENABLED START -----*/

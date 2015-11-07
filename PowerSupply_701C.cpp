@@ -58,11 +58,15 @@ static const char *RcsId = "$Id:  $";
 //================================================================
 //  State         |  Inherited (no method)
 //  Status        |  Inherited (no method)
+//  ChargingOn    |  charging_on
+//  ChargingOff   |  charging_off
+//  SetVoltage    |  set_voltage
 //================================================================
 
 //================================================================
 //  Attributes managed is:
 //================================================================
+//  Voltage  |  Tango::DevShort	Scalar
 //================================================================
 
 namespace PowerSupply_701C_ns
@@ -121,6 +125,7 @@ void PowerSupply_701C::delete_device()
 	//	Delete device allocated objects
 	
 	/*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::delete_device
+	delete[] attr_Voltage_read;
 }
 
 //--------------------------------------------------------
@@ -140,6 +145,7 @@ void PowerSupply_701C::init_device()
 	
 	//	No device property to be read from database
 	
+	attr_Voltage_read = new Tango::DevShort[1];
 	/*----- PROTECTED REGION ID(PowerSupply_701C::init_device) ENABLED START -----*/
 	
 	//	Initialize device
@@ -179,7 +185,60 @@ void PowerSupply_701C::read_attr_hardware(TANGO_UNUSED(vector<long> &attr_list))
 	
 	/*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::read_attr_hardware
 }
+//--------------------------------------------------------
+/**
+ *	Method      : PowerSupply_701C::write_attr_hardware()
+ *	Description : Hardware writing for attributes
+ */
+//--------------------------------------------------------
+void PowerSupply_701C::write_attr_hardware(TANGO_UNUSED(vector<long> &attr_list))
+{
+	DEBUG_STREAM << "PowerSupply_701C::write_attr_hardware(vector<long> &attr_list) entering... " << endl;
+	/*----- PROTECTED REGION ID(PowerSupply_701C::write_attr_hardware) ENABLED START -----*/
+	
+	//	Add your own code
+	
+	/*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::write_attr_hardware
+}
 
+//--------------------------------------------------------
+/**
+ *	Read attribute Voltage related method
+ *	Description: 
+ *
+ *	Data type:	Tango::DevShort
+ *	Attr type:	Scalar
+ */
+//--------------------------------------------------------
+void PowerSupply_701C::read_Voltage(Tango::Attribute &attr)
+{
+	DEBUG_STREAM << "PowerSupply_701C::read_Voltage(Tango::Attribute &attr) entering... " << endl;
+	/*----- PROTECTED REGION ID(PowerSupply_701C::read_Voltage) ENABLED START -----*/
+	//	Set the attribute value
+	attr.set_value(attr_Voltage_read);
+	
+	/*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::read_Voltage
+}
+//--------------------------------------------------------
+/**
+ *	Write attribute Voltage related method
+ *	Description: 
+ *
+ *	Data type:	Tango::DevShort
+ *	Attr type:	Scalar
+ */
+//--------------------------------------------------------
+void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
+{
+	DEBUG_STREAM << "PowerSupply_701C::write_Voltage(Tango::WAttribute &attr) entering... " << endl;
+	//	Retrieve write value
+	Tango::DevShort	w_val;
+	attr.get_write_value(w_val);
+	/*----- PROTECTED REGION ID(PowerSupply_701C::write_Voltage) ENABLED START -----*/
+	
+	
+	/*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::write_Voltage
+}
 
 //--------------------------------------------------------
 /**
@@ -197,6 +256,58 @@ void PowerSupply_701C::add_dynamic_attributes()
 	/*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::add_dynamic_attributes
 }
 
+//--------------------------------------------------------
+/**
+ *	Command ChargingOn related method
+ *	Description: Switch on power supply
+ *
+ */
+//--------------------------------------------------------
+void PowerSupply_701C::charging_on()
+{
+	DEBUG_STREAM << "PowerSupply_701C::ChargingOn()  - " << device_name << endl;
+	/*----- PROTECTED REGION ID(PowerSupply_701C::charging_on) ENABLED START -----*/
+	
+	//	Add your own code
+	
+	/*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::charging_on
+}
+//--------------------------------------------------------
+/**
+ *	Command ChargingOff related method
+ *	Description: Switch off power supply
+ *
+ */
+//--------------------------------------------------------
+void PowerSupply_701C::charging_off()
+{
+	DEBUG_STREAM << "PowerSupply_701C::ChargingOff()  - " << device_name << endl;
+	/*----- PROTECTED REGION ID(PowerSupply_701C::charging_off) ENABLED START -----*/
+	
+	//	Add your own code
+	
+	/*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::charging_off
+}
+//--------------------------------------------------------
+/**
+ *	Command SetVoltage related method
+ *	Description: Voltage setting. Input parameter is the new value, Output parameter is the old value
+ *
+ *	@param argin 
+ *	@returns 
+ */
+//--------------------------------------------------------
+Tango::DevShort PowerSupply_701C::set_voltage(Tango::DevShort argin)
+{
+	Tango::DevShort argout;
+	DEBUG_STREAM << "PowerSupply_701C::SetVoltage()  - " << device_name << endl;
+	/*----- PROTECTED REGION ID(PowerSupply_701C::set_voltage) ENABLED START -----*/
+	
+	//	Add your own code
+	
+	/*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::set_voltage
+	return argout;
+}
 //--------------------------------------------------------
 /**
  *	Method      : PowerSupply_701C::add_dynamic_commands()

@@ -66,6 +66,9 @@ class PowerSupply_701C : public TANGO_BASE_CLASS
 /*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::Data Members
 
 
+//	Attribute data members
+public:
+	Tango::DevShort	*attr_Voltage_read;
 
 //	Constructors and destructors
 public:
@@ -122,6 +125,24 @@ public:
 	 */
 	//--------------------------------------------------------
 	virtual void read_attr_hardware(vector<long> &attr_list);
+	//--------------------------------------------------------
+	/*
+	 *	Method      : PowerSupply_701C::write_attr_hardware()
+	 *	Description : Hardware writing for attributes.
+	 */
+	//--------------------------------------------------------
+	virtual void write_attr_hardware(vector<long> &attr_list);
+
+/**
+ *	Attribute Voltage related methods
+ *	Description: 
+ *
+ *	Data type:	Tango::DevShort
+ *	Attr type:	Scalar
+ */
+	virtual void read_Voltage(Tango::Attribute &attr);
+	virtual void write_Voltage(Tango::WAttribute &attr);
+	virtual bool is_Voltage_allowed(Tango::AttReqType type);
 
 
 	//--------------------------------------------------------
@@ -137,6 +158,29 @@ public:
 
 //	Command related methods
 public:
+	/**
+	 *	Command ChargingOn related method
+	 *	Description: Switch on power supply
+	 *
+	 */
+	virtual void charging_on();
+	virtual bool is_ChargingOn_allowed(const CORBA::Any &any);
+	/**
+	 *	Command ChargingOff related method
+	 *	Description: Switch off power supply
+	 *
+	 */
+	virtual void charging_off();
+	virtual bool is_ChargingOff_allowed(const CORBA::Any &any);
+	/**
+	 *	Command SetVoltage related method
+	 *	Description: Voltage setting. Input parameter is the new value, Output parameter is the old value
+	 *
+	 *	@param argin 
+	 *	@returns 
+	 */
+	virtual Tango::DevShort set_voltage(Tango::DevShort argin);
+	virtual bool is_SetVoltage_allowed(const CORBA::Any &any);
 
 
 	//--------------------------------------------------------

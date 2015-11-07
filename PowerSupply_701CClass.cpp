@@ -158,6 +158,61 @@ PowerSupply_701CClass *PowerSupply_701CClass::instance()
 //===================================================================
 //	Command execution method calls
 //===================================================================
+//--------------------------------------------------------
+/**
+ * method : 		ChargingOnClass::execute()
+ * description : 	method to trigger the execution of the command.
+ *
+ * @param	device	The device on which the command must be executed
+ * @param	in_any	The command input data
+ *
+ *	returns The command output data (packed in the Any object)
+ */
+//--------------------------------------------------------
+CORBA::Any *ChargingOnClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const CORBA::Any &in_any))
+{
+	cout2 << "ChargingOnClass::execute(): arrived" << endl;
+	((static_cast<PowerSupply_701C *>(device))->charging_on());
+	return new CORBA::Any();
+}
+
+//--------------------------------------------------------
+/**
+ * method : 		ChargingOffClass::execute()
+ * description : 	method to trigger the execution of the command.
+ *
+ * @param	device	The device on which the command must be executed
+ * @param	in_any	The command input data
+ *
+ *	returns The command output data (packed in the Any object)
+ */
+//--------------------------------------------------------
+CORBA::Any *ChargingOffClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const CORBA::Any &in_any))
+{
+	cout2 << "ChargingOffClass::execute(): arrived" << endl;
+	((static_cast<PowerSupply_701C *>(device))->charging_off());
+	return new CORBA::Any();
+}
+
+//--------------------------------------------------------
+/**
+ * method : 		SetVoltageClass::execute()
+ * description : 	method to trigger the execution of the command.
+ *
+ * @param	device	The device on which the command must be executed
+ * @param	in_any	The command input data
+ *
+ *	returns The command output data (packed in the Any object)
+ */
+//--------------------------------------------------------
+CORBA::Any *SetVoltageClass::execute(Tango::DeviceImpl *device, const CORBA::Any &in_any)
+{
+	cout2 << "SetVoltageClass::execute(): arrived" << endl;
+	Tango::DevShort argin;
+	extract(in_any, argin);
+	return insert((static_cast<PowerSupply_701C *>(device))->set_voltage(argin));
+}
+
 
 //===================================================================
 //	Properties management
@@ -431,6 +486,30 @@ void PowerSupply_701CClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	Add your own code
 	
 	/*----- PROTECTED REGION END -----*/	//	PowerSupply_701CClass::attribute_factory_before
+	//	Attribute : Voltage
+	VoltageAttrib	*voltage = new VoltageAttrib();
+	Tango::UserDefaultAttrProp	voltage_prop;
+	//	description	not set for Voltage
+	voltage_prop.set_label("Voltage");
+	voltage_prop.set_unit("V");
+	//	standard_unit	not set for Voltage
+	//	display_unit	not set for Voltage
+	//	format	not set for Voltage
+	//	max_value	not set for Voltage
+	//	min_value	not set for Voltage
+	//	max_alarm	not set for Voltage
+	//	min_alarm	not set for Voltage
+	//	max_warning	not set for Voltage
+	//	min_warning	not set for Voltage
+	//	delta_t	not set for Voltage
+	//	delta_val	not set for Voltage
+	
+	voltage->set_default_properties(voltage_prop);
+	//	Not Polled
+	voltage->set_disp_level(Tango::OPERATOR);
+	//	Not Memorized
+	att_list.push_back(voltage);
+
 
 	//	Create a list of static attributes
 	create_static_attribute_list(get_class_attr()->get_attr_list());
@@ -475,6 +554,33 @@ void PowerSupply_701CClass::command_factory()
 	
 	/*----- PROTECTED REGION END -----*/	//	PowerSupply_701CClass::command_factory_before
 
+
+	//	Command ChargingOn
+	ChargingOnClass	*pChargingOnCmd =
+		new ChargingOnClass("ChargingOn",
+			Tango::DEV_VOID, Tango::DEV_VOID,
+			"",
+			"",
+			Tango::OPERATOR);
+	command_list.push_back(pChargingOnCmd);
+
+	//	Command ChargingOff
+	ChargingOffClass	*pChargingOffCmd =
+		new ChargingOffClass("ChargingOff",
+			Tango::DEV_VOID, Tango::DEV_VOID,
+			"",
+			"",
+			Tango::OPERATOR);
+	command_list.push_back(pChargingOffCmd);
+
+	//	Command SetVoltage
+	SetVoltageClass	*pSetVoltageCmd =
+		new SetVoltageClass("SetVoltage",
+			Tango::DEV_SHORT, Tango::DEV_SHORT,
+			"",
+			"",
+			Tango::OPERATOR);
+	command_list.push_back(pSetVoltageCmd);
 
 	/*----- PROTECTED REGION ID(PowerSupply_701CClass::command_factory_after) ENABLED START -----*/
 	

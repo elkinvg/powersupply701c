@@ -56,6 +56,98 @@ namespace PowerSupply_701C_ns
 
 /*----- PROTECTED REGION END -----*/	//	PowerSupply_701CClass::classes for dynamic creation
 
+//=========================================
+//	Define classes for attributes
+//=========================================
+//	Attribute Voltage class definition
+class VoltageAttrib: public Tango::Attr
+{
+public:
+	VoltageAttrib():Attr("Voltage",
+			Tango::DEV_SHORT, Tango::READ_WRITE) {};
+	~VoltageAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<PowerSupply_701C *>(dev))->read_Voltage(att);}
+	virtual void write(Tango::DeviceImpl *dev,Tango::WAttribute &att)
+		{(static_cast<PowerSupply_701C *>(dev))->write_Voltage(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<PowerSupply_701C *>(dev))->is_Voltage_allowed(ty);}
+};
+
+
+//=========================================
+//	Define classes for commands
+//=========================================
+//	Command ChargingOn class definition
+class ChargingOnClass : public Tango::Command
+{
+public:
+	ChargingOnClass(const char   *name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out,
+				   const char        *in_desc,
+				   const char        *out_desc,
+				   Tango::DispLevel  level)
+	:Command(name,in,out,in_desc,out_desc, level)	{};
+
+	ChargingOnClass(const char   *name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out)
+	:Command(name,in,out)	{};
+	~ChargingOnClass() {};
+	
+	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
+	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
+	{return (static_cast<PowerSupply_701C *>(dev))->is_ChargingOn_allowed(any);}
+};
+
+//	Command ChargingOff class definition
+class ChargingOffClass : public Tango::Command
+{
+public:
+	ChargingOffClass(const char   *name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out,
+				   const char        *in_desc,
+				   const char        *out_desc,
+				   Tango::DispLevel  level)
+	:Command(name,in,out,in_desc,out_desc, level)	{};
+
+	ChargingOffClass(const char   *name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out)
+	:Command(name,in,out)	{};
+	~ChargingOffClass() {};
+	
+	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
+	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
+	{return (static_cast<PowerSupply_701C *>(dev))->is_ChargingOff_allowed(any);}
+};
+
+//	Command SetVoltage class definition
+class SetVoltageClass : public Tango::Command
+{
+public:
+	SetVoltageClass(const char   *name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out,
+				   const char        *in_desc,
+				   const char        *out_desc,
+				   Tango::DispLevel  level)
+	:Command(name,in,out,in_desc,out_desc, level)	{};
+
+	SetVoltageClass(const char   *name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out)
+	:Command(name,in,out)	{};
+	~SetVoltageClass() {};
+	
+	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
+	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
+	{return (static_cast<PowerSupply_701C *>(dev))->is_SetVoltage_allowed(any);}
+};
+
+
 /**
  *	The PowerSupply_701CClass singleton definition
  */
