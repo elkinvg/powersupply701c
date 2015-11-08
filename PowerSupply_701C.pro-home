@@ -1,0 +1,13 @@
+TEMPLATE = app
+CONFIG += console c++11
+CONFIG -= app_bundle
+CONFIG -= qt
+
+INCLUDEPATH += /usr/local/include/tango \
+            /usr/local/include
+
+SOURCES += main.cpp \
+PowerSupply_701CStateMachine.cpp ClassFactory.cpp  PowerSupply_701CClass.cpp \
+main.cpp          PowerSupply_701CClass.h \
+PowerSupply_701C.cpp PowerSupply_701C.h
+

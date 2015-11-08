@@ -10,3 +10,4 @@ obj/*
 *.bck
 *.pro
 *.user
+Makefile
