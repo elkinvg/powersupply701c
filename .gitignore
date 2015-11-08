@@ -5,3 +5,8 @@ obj/*
 .settings/*
 .cproject
 .project
+*.xmi
+*-back
+*.bck
+*.pro
+*.user

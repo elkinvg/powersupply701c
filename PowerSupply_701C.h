@@ -181,6 +181,13 @@ public:
 	 */
 	virtual Tango::DevShort set_voltage(Tango::DevShort argin);
 	virtual bool is_SetVoltage_allowed(const CORBA::Any &any);
+	/**
+	 *	Command CheckAdcOutput related method
+	 *	Description: Checking ADC output.
+	 *
+	 */
+	virtual void check_adc_output();
+	virtual bool is_CheckAdcOutput_allowed(const CORBA::Any &any);
 
 
 	//--------------------------------------------------------

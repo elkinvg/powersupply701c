@@ -54,13 +54,14 @@ static const char *RcsId = "$Id:  $";
 //  The following table gives the correspondence
 //  between command and method names.
 //
-//  Command name  |  Method name
+//  Command name    |  Method name
 //================================================================
-//  State         |  Inherited (no method)
-//  Status        |  Inherited (no method)
-//  ChargingOn    |  charging_on
-//  ChargingOff   |  charging_off
-//  SetVoltage    |  set_voltage
+//  State           |  Inherited (no method)
+//  Status          |  Inherited (no method)
+//  ChargingOn      |  charging_on
+//  ChargingOff     |  charging_off
+//  SetVoltage      |  set_voltage
+//  CheckAdcOutput  |  check_adc_output
 //================================================================
 
 //================================================================
@@ -307,6 +308,22 @@ Tango::DevShort PowerSupply_701C::set_voltage(Tango::DevShort argin)
 	
 	/*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::set_voltage
 	return argout;
+}
+//--------------------------------------------------------
+/**
+ *	Command CheckAdcOutput related method
+ *	Description: Checking ADC output.
+ *
+ */
+//--------------------------------------------------------
+void PowerSupply_701C::check_adc_output()
+{
+	DEBUG_STREAM << "PowerSupply_701C::CheckAdcOutput()  - " << device_name << endl;
+	/*----- PROTECTED REGION ID(PowerSupply_701C::check_adc_output) ENABLED START -----*/
+	
+	//	Add your own code
+	
+	/*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::check_adc_output
 }
 //--------------------------------------------------------
 /**

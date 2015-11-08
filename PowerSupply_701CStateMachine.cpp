@@ -42,6 +42,8 @@ static const char *RcsId = "$Id:  $";
 //================================================================
 //  States  |  Description
 //================================================================
+//  ON      |  
+//  OFF     |  
 
 
 namespace PowerSupply_701C_ns
@@ -117,6 +119,21 @@ bool PowerSupply_701C::is_SetVoltage_allowed(TANGO_UNUSED(const CORBA::Any &any)
 	/*----- PROTECTED REGION ID(PowerSupply_701C::SetVoltageStateAllowed) ENABLED START -----*/
 	
 	/*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::SetVoltageStateAllowed
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : PowerSupply_701C::is_CheckAdcOutput_allowed()
+ *	Description : Execution allowed for CheckAdcOutput attribute
+ */
+//--------------------------------------------------------
+bool PowerSupply_701C::is_CheckAdcOutput_allowed(TANGO_UNUSED(const CORBA::Any &any))
+{
+	//	Not any excluded states for CheckAdcOutput command.
+	/*----- PROTECTED REGION ID(PowerSupply_701C::CheckAdcOutputStateAllowed) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::CheckAdcOutputStateAllowed
 	return true;
 }
 

@@ -147,6 +147,29 @@ public:
 	{return (static_cast<PowerSupply_701C *>(dev))->is_SetVoltage_allowed(any);}
 };
 
+//	Command CheckAdcOutput class definition
+class CheckAdcOutputClass : public Tango::Command
+{
+public:
+	CheckAdcOutputClass(const char   *name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out,
+				   const char        *in_desc,
+				   const char        *out_desc,
+				   Tango::DispLevel  level)
+	:Command(name,in,out,in_desc,out_desc, level)	{};
+
+	CheckAdcOutputClass(const char   *name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out)
+	:Command(name,in,out)	{};
+	~CheckAdcOutputClass() {};
+	
+	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
+	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
+	{return (static_cast<PowerSupply_701C *>(dev))->is_CheckAdcOutput_allowed(any);}
+};
+
 
 /**
  *	The PowerSupply_701CClass singleton definition

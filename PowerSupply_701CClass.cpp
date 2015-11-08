@@ -213,6 +213,24 @@ CORBA::Any *SetVoltageClass::execute(Tango::DeviceImpl *device, const CORBA::Any
 	return insert((static_cast<PowerSupply_701C *>(device))->set_voltage(argin));
 }
 
+//--------------------------------------------------------
+/**
+ * method : 		CheckAdcOutputClass::execute()
+ * description : 	method to trigger the execution of the command.
+ *
+ * @param	device	The device on which the command must be executed
+ * @param	in_any	The command input data
+ *
+ *	returns The command output data (packed in the Any object)
+ */
+//--------------------------------------------------------
+CORBA::Any *CheckAdcOutputClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const CORBA::Any &in_any))
+{
+	cout2 << "CheckAdcOutputClass::execute(): arrived" << endl;
+	((static_cast<PowerSupply_701C *>(device))->check_adc_output());
+	return new CORBA::Any();
+}
+
 
 //===================================================================
 //	Properties management
@@ -581,6 +599,15 @@ void PowerSupply_701CClass::command_factory()
 			"",
 			Tango::OPERATOR);
 	command_list.push_back(pSetVoltageCmd);
+
+	//	Command CheckAdcOutput
+	CheckAdcOutputClass	*pCheckAdcOutputCmd =
+		new CheckAdcOutputClass("CheckAdcOutput",
+			Tango::DEV_VOID, Tango::DEV_VOID,
+			"",
+			"",
+			Tango::OPERATOR);
+	command_list.push_back(pCheckAdcOutputCmd);
 
 	/*----- PROTECTED REGION ID(PowerSupply_701CClass::command_factory_after) ENABLED START -----*/
 	
