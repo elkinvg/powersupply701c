@@ -62,6 +62,8 @@ class PowerSupply_701C : public TANGO_BASE_CLASS
 /*----- PROTECTED REGION ID(PowerSupply_701C::Data Members) ENABLED START -----*/
 
 //	Add your own data members
+public:
+    Tango::DevShort attr_Voltage_write;
 
 /*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::Data Members
 
@@ -201,6 +203,9 @@ public:
 /*----- PROTECTED REGION ID(PowerSupply_701C::Additional Method prototypes) ENABLED START -----*/
 
 //	Additional Method prototypes
+protected:
+    Tango::DevShort voltage;
+    Tango::DevShort prevVoltage;
 
 /*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::Additional Method prototypes
 };

@@ -44,6 +44,8 @@ static const char *RcsId = "$Id:  $";
 //================================================================
 //  ON      |  
 //  OFF     |  
+//  FAULT   |  
+//  CLOSE   |  
 
 
 namespace PowerSupply_701C_ns

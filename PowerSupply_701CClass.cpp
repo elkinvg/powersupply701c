@@ -513,7 +513,7 @@ void PowerSupply_701CClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	standard_unit	not set for Voltage
 	//	display_unit	not set for Voltage
 	//	format	not set for Voltage
-	//	max_value	not set for Voltage
+	voltage_prop.set_max_value("500");
 	//	min_value	not set for Voltage
 	//	max_alarm	not set for Voltage
 	//	min_alarm	not set for Voltage

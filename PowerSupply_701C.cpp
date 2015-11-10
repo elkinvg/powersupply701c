@@ -236,8 +236,11 @@ void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
 	Tango::DevShort	w_val;
 	attr.get_write_value(w_val);
 	/*----- PROTECTED REGION ID(PowerSupply_701C::write_Voltage) ENABLED START -----*/
-	
-	
+    voltage = w_val;
+    *attr_Voltage_read = voltage;
+    attr_Voltage_write = voltage;
+
+
 	/*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::write_Voltage
 }
 
