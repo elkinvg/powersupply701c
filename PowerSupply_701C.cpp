@@ -144,14 +144,113 @@ void PowerSupply_701C::init_device()
 	
 	/*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::init_device_before
 	
-	//	No device property to be read from database
+	//	Get the device properties from database
+	get_device_property();
 	
 	attr_Voltage_read = new Tango::DevShort[1];
+	//	No longer if mandatory property not set. 
+	if (mandatoryNotDefined)
+		return;
+
 	/*----- PROTECTED REGION ID(PowerSupply_701C::init_device) ENABLED START -----*/
 	
 	//	Initialize device
+    //elkin
+    try {
+        DEBUG_STREAM << "Socket:    " << socket << endl;
+        socketProxy = new Tango::DeviceProxy(socket);
+        socketProxy->command_inout("Init");
+    } catch (Tango::DevFailed &e) {
+        Tango::Except::print_exception(e);
+        set_state(Tango::FAULT);
+        set_status("Can't connect to socket " + socket);
+    }
 	
 	/*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::init_device
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : PowerSupply_701C::get_device_property()
+ *	Description : Read database to initialize property data members.
+ */
+//--------------------------------------------------------
+void PowerSupply_701C::get_device_property()
+{
+	/*----- PROTECTED REGION ID(PowerSupply_701C::get_device_property_before) ENABLED START -----*/
+	
+	//	Initialize property data members
+    //elkin
+    socket = "sock/pssocket/1";
+	
+	/*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::get_device_property_before
+
+	mandatoryNotDefined = false;
+
+	//	Read device properties from database.
+	Tango::DbData	dev_prop;
+	dev_prop.push_back(Tango::DbDatum("Socket"));
+
+	//	is there at least one property to be read ?
+	if (dev_prop.size()>0)
+	{
+		//	Call database and extract values
+		if (Tango::Util::instance()->_UseDb==true)
+			get_db_device()->get_property(dev_prop);
+	
+		//	get instance on PowerSupply_701CClass to get class property
+		Tango::DbDatum	def_prop, cl_prop;
+		PowerSupply_701CClass	*ds_class =
+			(static_cast<PowerSupply_701CClass *>(get_device_class()));
+		int	i = -1;
+
+		//	Try to initialize Socket from class property
+		cl_prop = ds_class->get_class_property(dev_prop[++i].name);
+		if (cl_prop.is_empty()==false)	cl_prop  >>  socket;
+		else {
+			//	Try to initialize Socket from default device value
+			def_prop = ds_class->get_default_device_property(dev_prop[i].name);
+			if (def_prop.is_empty()==false)	def_prop  >>  socket;
+		}
+		//	And try to extract Socket value from database
+		if (dev_prop[i].is_empty()==false)	dev_prop[i]  >>  socket;
+		//	Property StartDsPath is mandatory, check if has been defined in database.
+		check_mandatory_property(cl_prop, dev_prop[i]);
+
+	}
+
+	/*----- PROTECTED REGION ID(PowerSupply_701C::get_device_property_after) ENABLED START -----*/
+	
+	//	Check device property data members init
+	
+	/*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::get_device_property_after
+}
+//--------------------------------------------------------
+/**
+ *	Method      : PowerSupply_701C::check_mandatory_property()
+ *	Description : For mandatory properties check if defined in database.
+ */
+//--------------------------------------------------------
+void PowerSupply_701C::check_mandatory_property(Tango::DbDatum &class_prop, Tango::DbDatum &dev_prop)
+{
+	//	Check if all properties are empty
+	if (class_prop.is_empty() && dev_prop.is_empty())
+	{
+		TangoSys_OMemStream	tms;
+		tms << endl <<"Property \'" << dev_prop.name;
+		if (Tango::Util::instance()->_UseDb==true)
+			tms << "\' is mandatory but not defined in database";
+		else
+			tms << "\' is mandatory but cannot be defined without database";
+		string	status(get_status());
+		status += tms.str();
+		set_status(status);
+		mandatoryNotDefined = true;
+		/*----- PROTECTED REGION ID(PowerSupply_701C::check_mandatory_property) ENABLED START -----*/
+		cerr << tms.str() << " for " << device_name << endl;
+		
+		/*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::check_mandatory_property
+	}
 }
 
 
@@ -164,6 +263,14 @@ void PowerSupply_701C::init_device()
 void PowerSupply_701C::always_executed_hook()
 {
 	DEBUG_STREAM << "PowerSupply_701C::always_executed_hook()  " << device_name << endl;
+	if (mandatoryNotDefined)
+	{
+		string	status(get_status());
+		Tango::Except::throw_exception(
+					(const char *)"PROPERTY_NOT_SET",
+					status.c_str(),
+					(const char *)"PowerSupply_701C::always_executed_hook()");
+	}
 	/*----- PROTECTED REGION ID(PowerSupply_701C::always_executed_hook) ENABLED START -----*/
 	
 	//	code always executed before all requests
@@ -341,12 +448,20 @@ void PowerSupply_701C::add_dynamic_commands()
 	
 	//	Add your own code to create and add dynamic commands if any
 	
-	/*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::add_dynamic_commands
+    /*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::add_dynamic_commands
 }
 
 /*----- PROTECTED REGION ID(PowerSupply_701C::namespace_ending) ENABLED START -----*/
 
 //	Additional Methods
+
+char PowerSupply_701C::calcCheckSum(string bytes)
+{
+    //short size = bytes.size();
+    char sum{0};
+    for (auto& i: bytes) sum += i;
+    return sum;
+}
 
 /*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::namespace_ending
 } //	namespace

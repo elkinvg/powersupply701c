@@ -54,6 +54,7 @@ namespace PowerSupply_701C_ns
 
 //	Additional Class Declarations
 
+
 /*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::Additional Class Declarations
 
 class PowerSupply_701C : public TANGO_BASE_CLASS
@@ -65,8 +66,31 @@ class PowerSupply_701C : public TANGO_BASE_CLASS
 public:
     Tango::DevShort attr_Voltage_write;
 
+private:
+
+    // elkin
+    //DeviceProxy
+    Tango::DeviceProxy *socketProxy;
+    // state bytes
+    bool isExternalControl;
+    bool isActive; // if charging on
+    bool isVoltageMatchesToGiven;
+    bool isVoltageFromOutComp;
+
+    // errors bytes
+    enum class ErrorByte {Overtheat,VoltageBelowNorm,ShortCircuit,BreakLoad};
+//    bool isOvertheat;
+//    bool isVoltageFromOutComp;
+//    bool isVoltage
+
 /*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::Data Members
 
+//	Device property data members
+public:
+	//	Socket:	Tango device name in format ``domain/family/member``
+	string	socket;
+
+	bool	mandatoryNotDefined;
 
 //	Attribute data members
 public:
@@ -113,10 +137,18 @@ public:
 	 */
 	virtual void init_device();
 	/*
+	 *	Read the device properties from database
+	 */
+	void get_device_property();
+	/*
 	 *	Always executed method before execution command method.
 	 */
 	virtual void always_executed_hook();
 
+	/*
+	 *	Check if mandatory property has been set
+	 */
+	 void check_mandatory_property(Tango::DbDatum &class_prop, Tango::DbDatum &dev_prop);
 
 //	Attribute methods
 public:
@@ -203,6 +235,10 @@ public:
 /*----- PROTECTED REGION ID(PowerSupply_701C::Additional Method prototypes) ENABLED START -----*/
 
 //	Additional Method prototypes
+    //elkin
+public:
+    char calcCheckSum(string bytes);
+
 protected:
     Tango::DevShort voltage;
     Tango::DevShort prevVoltage;

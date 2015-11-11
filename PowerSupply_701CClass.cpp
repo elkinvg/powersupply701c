@@ -300,6 +300,19 @@ void PowerSupply_701CClass::set_default_property()
 	//	Set Default Class Properties
 
 	//	Set Default device Properties
+	prop_name = "Socket";
+	prop_desc = "Tango device name in format ``domain/family/member``";
+	prop_def  = "";
+	vect_data.clear();
+	if (prop_def.length()>0)
+	{
+		Tango::DbDatum	data(prop_name);
+		data << vect_data ;
+		dev_def_prop.push_back(data);
+		add_wiz_dev_prop(prop_name, prop_desc,  prop_def);
+	}
+	else
+		add_wiz_dev_prop(prop_name, prop_desc);
 }
 
 //--------------------------------------------------------
@@ -514,7 +527,7 @@ void PowerSupply_701CClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	display_unit	not set for Voltage
 	//	format	not set for Voltage
 	voltage_prop.set_max_value("500");
-	//	min_value	not set for Voltage
+	voltage_prop.set_min_value("0");
 	//	max_alarm	not set for Voltage
 	//	min_alarm	not set for Voltage
 	//	max_warning	not set for Voltage
