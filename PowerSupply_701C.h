@@ -69,7 +69,6 @@ public:
 private:
 
     // elkin
-    //DeviceProxy
     Tango::DeviceProxy *socketProxy;
     // state bytes
     bool isExternalControl;
@@ -82,6 +81,19 @@ private:
 //    bool isOvertheat;
 //    bool isVoltageFromOutComp;
 //    bool isVoltage
+
+    // const commands
+    const string CHARGINGONCOMM = {'#','2','C',calcCheckSumCommand('#','2','C')};
+    const string CHARGINGOFFCOMM = {'#','2','D',calcCheckSumCommand('#','2','D')};
+    const string POLLSTATE = {'#','2','E',calcCheckSumCommand('#','2','E')};
+    const string OUTPUTADC = {'#','2','A',calcCheckSumCommand('#','2','A')};
+    // const answers
+    const string OK = "OK";     // is OK
+    const string ERR0 = "E0";   // checksum error
+    const string ERR1 = "E1";   // format error. broken command structure
+    const string ERR2 = "E2";   // unckown command
+    const string ERR3 = "E3";   // exceeding the allowable value for U (500V)
+    const string ERR4 = "E4";   // command can not be executed
 
 /*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::Data Members
 
@@ -236,8 +248,12 @@ public:
 
 //	Additional Method prototypes
     //elkin
-public:
+private:
     char calcCheckSum(string bytes);
+    void pollState();
+    void errorReply(string ERROR);
+
+    static constexpr char calcCheckSumCommand(char a, char b,char c) {return a+b+c;}
 
 protected:
     Tango::DevShort voltage;
