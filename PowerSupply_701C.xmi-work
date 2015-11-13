@@ -45,15 +45,6 @@
       </argout>
       <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
     </commands>
-    <commands name="SetVoltage" description="Voltage setting. Input parameter is the new value, Output parameter is the old value" execMethod="set_voltage" displayLevel="OPERATOR" polledPeriod="0" isDynamic="false">
-      <argin description="">
-        <type xsi:type="pogoDsl:ShortType"/>
-      </argin>
-      <argout description="">
-        <type xsi:type="pogoDsl:ShortType"/>
-      </argout>
-      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
-    </commands>
     <commands name="CheckAdcOutput" description="Checking ADC output." execMethod="check_adc_output" displayLevel="OPERATOR" polledPeriod="0" isDynamic="false">
       <argin description="">
         <type xsi:type="pogoDsl:VoidType"/>
@@ -81,6 +72,9 @@
       <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
     </states>
     <states name="CLOSE" description="">
+      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
+    </states>
+    <states name="DISABLE" description="">
       <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
     </states>
     <preferences docHome="./doc_html" makefileHome="/usr/local/share/pogo/preferences"/>
