@@ -40,12 +40,13 @@ static const char *RcsId = "$Id:  $";
 /*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::PowerSupply_701CStateMachine.cpp
 
 //================================================================
-//  States  |  Description
+//  States   |  Description
 //================================================================
-//  ON      |  
-//  OFF     |  
-//  FAULT   |  
-//  CLOSE   |  
+//  ON       |  
+//  OFF      |  
+//  FAULT    |  
+//  CLOSE    |  
+//  DISABLE  |  
 
 
 namespace PowerSupply_701C_ns
@@ -106,21 +107,6 @@ bool PowerSupply_701C::is_ChargingOff_allowed(TANGO_UNUSED(const CORBA::Any &any
 	/*----- PROTECTED REGION ID(PowerSupply_701C::ChargingOffStateAllowed) ENABLED START -----*/
 	
 	/*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::ChargingOffStateAllowed
-	return true;
-}
-
-//--------------------------------------------------------
-/**
- *	Method      : PowerSupply_701C::is_SetVoltage_allowed()
- *	Description : Execution allowed for SetVoltage attribute
- */
-//--------------------------------------------------------
-bool PowerSupply_701C::is_SetVoltage_allowed(TANGO_UNUSED(const CORBA::Any &any))
-{
-	//	Not any excluded states for SetVoltage command.
-	/*----- PROTECTED REGION ID(PowerSupply_701C::SetVoltageStateAllowed) ENABLED START -----*/
-	
-	/*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::SetVoltageStateAllowed
 	return true;
 }
 

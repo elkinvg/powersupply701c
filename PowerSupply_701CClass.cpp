@@ -196,25 +196,6 @@ CORBA::Any *ChargingOffClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(co
 
 //--------------------------------------------------------
 /**
- * method : 		SetVoltageClass::execute()
- * description : 	method to trigger the execution of the command.
- *
- * @param	device	The device on which the command must be executed
- * @param	in_any	The command input data
- *
- *	returns The command output data (packed in the Any object)
- */
-//--------------------------------------------------------
-CORBA::Any *SetVoltageClass::execute(Tango::DeviceImpl *device, const CORBA::Any &in_any)
-{
-	cout2 << "SetVoltageClass::execute(): arrived" << endl;
-	Tango::DevShort argin;
-	extract(in_any, argin);
-	return insert((static_cast<PowerSupply_701C *>(device))->set_voltage(argin));
-}
-
-//--------------------------------------------------------
-/**
  * method : 		CheckAdcOutputClass::execute()
  * description : 	method to trigger the execution of the command.
  *
@@ -603,15 +584,6 @@ void PowerSupply_701CClass::command_factory()
 			"",
 			Tango::OPERATOR);
 	command_list.push_back(pChargingOffCmd);
-
-	//	Command SetVoltage
-	SetVoltageClass	*pSetVoltageCmd =
-		new SetVoltageClass("SetVoltage",
-			Tango::DEV_SHORT, Tango::DEV_SHORT,
-			"",
-			"",
-			Tango::OPERATOR);
-	command_list.push_back(pSetVoltageCmd);
 
 	//	Command CheckAdcOutput
 	CheckAdcOutputClass	*pCheckAdcOutputCmd =

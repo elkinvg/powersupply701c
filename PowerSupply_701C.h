@@ -76,8 +76,11 @@ private:
     bool isVoltageMatchesToGiven;
     bool isVoltageFromOutComp;
 
+    // state Socket
+    bool isSocketOn;
+
     // errors bytes
-    enum class ErrorByte {Overtheat,VoltageBelowNorm,ShortCircuit,BreakLoad};
+//    enum class ErrorByte {Overtheat,VoltageBelowNorm,ShortCircuit,BreakLoad};
 //    bool isOvertheat;
 //    bool isVoltageFromOutComp;
 //    bool isVoltage
@@ -219,15 +222,6 @@ public:
 	virtual void charging_off();
 	virtual bool is_ChargingOff_allowed(const CORBA::Any &any);
 	/**
-	 *	Command SetVoltage related method
-	 *	Description: Voltage setting. Input parameter is the new value, Output parameter is the old value
-	 *
-	 *	@param argin 
-	 *	@returns 
-	 */
-	virtual Tango::DevShort set_voltage(Tango::DevShort argin);
-	virtual bool is_SetVoltage_allowed(const CORBA::Any &any);
-	/**
 	 *	Command CheckAdcOutput related method
 	 *	Description: Checking ADC output.
 	 *
@@ -252,12 +246,14 @@ private:
     char calcCheckSum(string bytes);
     void pollState();
     void errorReply(string ERROR);
+    void checkSocketState();
+    string toSocketWriteAndRead(string command); // send command to socket
 
     static constexpr char calcCheckSumCommand(char a, char b,char c) {return a+b+c;}
 
 protected:
     Tango::DevShort voltage;
-    Tango::DevShort prevVoltage;
+    Tango::DevShort prevVoltage; // ???????
 
 /*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::Additional Method prototypes
 };
