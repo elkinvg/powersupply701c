@@ -10,4 +10,5 @@ obj/*
 *.bck
 *.pro
 *.user
+*.tmp
 Makefile

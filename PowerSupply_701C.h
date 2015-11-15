@@ -94,7 +94,7 @@ private:
     const string OK = "OK";     // is OK
     const string ERR0 = "E0";   // checksum error
     const string ERR1 = "E1";   // format error. broken command structure
-    const string ERR2 = "E2";   // unckown command
+    const string ERR2 = "E2";   // unknown command
     const string ERR3 = "E3";   // exceeding the allowable value for U (500V)
     const string ERR4 = "E4";   // command can not be executed
 
@@ -225,8 +225,9 @@ public:
 	 *	Command CheckAdcOutput related method
 	 *	Description: Checking ADC output.
 	 *
+	 *	@returns Voltage on the capacitors
 	 */
-	virtual void check_adc_output();
+	virtual Tango::DevShort check_adc_output();
 	virtual bool is_CheckAdcOutput_allowed(const CORBA::Any &any);
 
 
@@ -246,12 +247,17 @@ private:
     char calcCheckSum(string bytes);
     void pollState();
     void errorReply(string ERROR);
+
     void checkSocketState();
+    void checkErrorByte(char byte);
+    void checkStateByte(char byte);
+
     string toSocketWriteAndRead(string command); // send command to socket
 
+    void chargingOnOrOff(string command);
     static constexpr char calcCheckSumCommand(char a, char b,char c) {return a+b+c;}
 
-protected:
+//protected:
     Tango::DevShort voltage;
     Tango::DevShort prevVoltage; // ???????
 

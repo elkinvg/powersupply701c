@@ -208,8 +208,7 @@ CORBA::Any *ChargingOffClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(co
 CORBA::Any *CheckAdcOutputClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const CORBA::Any &in_any))
 {
 	cout2 << "CheckAdcOutputClass::execute(): arrived" << endl;
-	((static_cast<PowerSupply_701C *>(device))->check_adc_output());
-	return new CORBA::Any();
+	return insert((static_cast<PowerSupply_701C *>(device))->check_adc_output());
 }
 
 
@@ -588,9 +587,9 @@ void PowerSupply_701CClass::command_factory()
 	//	Command CheckAdcOutput
 	CheckAdcOutputClass	*pCheckAdcOutputCmd =
 		new CheckAdcOutputClass("CheckAdcOutput",
-			Tango::DEV_VOID, Tango::DEV_VOID,
+			Tango::DEV_VOID, Tango::DEV_SHORT,
 			"",
-			"",
+			"Voltage on the capacitors",
 			Tango::OPERATOR);
 	command_list.push_back(pCheckAdcOutputCmd);
 
