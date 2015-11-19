@@ -281,7 +281,7 @@ void PowerSupply_701C::check_mandatory_property(Tango::DbDatum &class_prop, Tang
 //--------------------------------------------------------
 void PowerSupply_701C::always_executed_hook()
 {
-    DEBUG_STREAM << "PowerSupply_701C::always_executed_hook()  " << device_name << endl;
+    //DEBUG_STREAM << "PowerSupply_701C::always_executed_hook()  " << device_name << endl;
     if (mandatoryNotDefined)
     {
         string	status(get_status());
@@ -330,7 +330,10 @@ void PowerSupply_701C::write_attr_hardware(TANGO_UNUSED(vector<long> &attr_list)
 
     if (!isSocketOn) {
         DEBUG_STREAM << "write_attr_hardware Socket error" << endl;
-        Tango::Except::throw_exception((const char *) "Socket error", "Couldn't connect to socket " + socket, "Bad socket reply");
+        //Tango::Except::throw_exception((const char *) "Socket error", "Couldn't connect to socket " + socket, "Bad socket reply");
+        set_state(Tango::FAULT);
+        set_status("Can't connect to socket " + socket);
+        return;
     } // throw ??????????
 
     checkPSState();
@@ -724,6 +727,36 @@ void PowerSupply_701C::checkSocketState()
 void PowerSupply_701C::checkErrorByte(char byte)
 {
     // ????????????????????? check errorbyte
+    if ((1) & byte)
+    {
+        set_state(Tango::FAULT);
+        set_status("Overheat of powersupply ");
+        // перегрев источника питания
+    }
+    if ((1 << 1) & byte)
+    {
+        set_state(Tango::FAULT);
+        set_status("Voltage of powersupply below normal. Problem with power source ");
+        // Напряжение питания ниже нормы (проблемы с трехфазным сетевым питанием)
+    }
+    if ((1 << 2) & byte)
+    {
+        set_state(Tango::FAULT);
+        set_status("short circuit");
+        // короткое замыкание
+    }
+    if ((1 << 3) & byte)
+    {
+        set_state(Tango::FAULT);
+        set_status("break of power");
+        // обрыв нагрузки
+    }
+    if ((1 << 6) & byte)
+    {
+        set_state(Tango::FAULT);
+        set_status("No lock on the connector INTERLOCK");
+        // нет блокировки по разъему INTERLOCK
+    }
 }
 
 void PowerSupply_701C::checkStateByte(char byte)
