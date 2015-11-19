@@ -835,7 +835,7 @@ void PowerSupply_701C::initStringCommand()
 
     OUTPUTADC.clear();
     OUTPUTADC = "#2A";
-    OUTPUTADC.push_back(calcCheckSumCommand(CHECKPSSTATE));
+    OUTPUTADC.push_back(calcCheckSumCommand(OUTPUTADC));
 
     OK = "OK";
     ERR0 = "E0";
