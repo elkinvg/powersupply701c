@@ -156,6 +156,9 @@ void PowerSupply_701C::init_device()
     /*----- PROTECTED REGION ID(PowerSupply_701C::init_device) ENABLED START -----*/
 
     //	Initialize device
+#ifndef SUPC11
+    initStringCommand();
+#endif
     //elkin
     isExternalControl = false;
     isActive = false;
@@ -583,8 +586,13 @@ void PowerSupply_701C::add_dynamic_commands()
 char PowerSupply_701C::calcCheckSum(string bytes)
 {
     //short size = bytes.size();
-    char sum{0};
-    for (auto& i: bytes) sum += i;
+//    char sum{0};
+//    for (auto& i: bytes) sum += i;
+    char sum = 0;
+    for (unsigned short i=0;i<bytes.size();i++)
+    {
+        sum+=bytes[i];
+    }
     return sum;
 }
 
@@ -777,6 +785,33 @@ void PowerSupply_701C::chargingOnOrOff(string command)
         set_status("Can't connect to socket " + socket);
     }
 }
+#ifndef SUPC11
+void PowerSupply_701C::initStringCommand()
+{
+    CHARGINGONCOMM.clear();
+    CHARGINGONCOMM = "#2C";
+    CHARGINGONCOMM.push_back(calcCheckSumCommand(CHARGINGONCOMM));
+
+    CHARGINGOFFCOMM.clear();
+    CHARGINGOFFCOMM = "#2D";
+    CHARGINGOFFCOMM.push_back(calcCheckSumCommand(CHARGINGOFFCOMM));
+
+    CHECKPSSTATE.clear();
+    CHECKPSSTATE = "#2E";
+    CHECKPSSTATE.push_back(calcCheckSumCommand(CHECKPSSTATE));
+
+    OUTPUTADC.clear();
+    OUTPUTADC = "#2A";
+    OUTPUTADC.push_back(calcCheckSumCommand(CHECKPSSTATE));
+
+    OK = "OK";
+    ERR0 = "E0";
+    ERR1 = "E1";
+    ERR2 = "E2";
+    ERR3 = "E3";
+    ERR4 = "E4";
+}
+#endif
 
 
 /*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::namespace_ending
