@@ -384,6 +384,7 @@ void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
 
     // timeout?????? for device
 
+	// if isActive || isExternalControl || isVoltageFromOutComp is false ???????
     if (isActive && isExternalControl && isVoltageFromOutComp)
     {
         string reply,commandToPS,checkSumChr;
@@ -406,7 +407,7 @@ void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
 //            attr_Voltage_write = voltage;
             *attr_Voltage_read = w_val; // ??????? READ нужно здесь?
             attr_Voltage_write = w_val;
-        }
+        } // ?????? if reply!=OK
 
     } // from setvoltage
     else {
@@ -503,7 +504,7 @@ Tango::DevShort PowerSupply_701C::check_adc_output()
 
     // timeout?????? for device
 
-    try {
+    try { // if isActive || isExternalControl || isVoltageFromOutComp is false ???????
         if (isActive && isExternalControl && isVoltageFromOutComp)
         {
             string reply = toSocketWriteAndRead(OUTPUTADC);
@@ -648,7 +649,6 @@ void PowerSupply_701C::checkPSState()
                     set_status("Checksum is incorrect");
                     return;
                 }
-                // check if byte3 of reply is 'E' ????
 
                 statebyte = replyStatus[3];
                 errorbyte = replyStatus[4];
@@ -791,7 +791,7 @@ string PowerSupply_701C::toSocketWriteAndRead(string command)
 
 void PowerSupply_701C::chargingOnOrOff(string command)
 {
-    try {
+    try { // if isActive || isExternalControl is false ???????
         if (isActive && isExternalControl)
         {
             string reply;
