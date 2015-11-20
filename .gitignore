@@ -12,3 +12,6 @@ obj/*
 *.user
 *.tmp
 Makefile
+bin/*
+lib/*
+vc10_proj/*

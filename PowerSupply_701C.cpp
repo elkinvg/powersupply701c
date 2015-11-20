@@ -305,7 +305,7 @@ void PowerSupply_701C::always_executed_hook()
 //--------------------------------------------------------
 void PowerSupply_701C::read_attr_hardware(TANGO_UNUSED(vector<long> &attr_list))
 {
-    DEBUG_STREAM << "PowerSupply_701C::read_attr_hardware(vector<long> &attr_list) entering... " << endl;
+    //DEBUG_STREAM << "PowerSupply_701C::read_attr_hardware(vector<long> &attr_list) entering... " << endl;
     /*----- PROTECTED REGION ID(PowerSupply_701C::read_attr_hardware) ENABLED START -----*/
 
     //	Add your own code
@@ -352,7 +352,7 @@ void PowerSupply_701C::write_attr_hardware(TANGO_UNUSED(vector<long> &attr_list)
 //--------------------------------------------------------
 void PowerSupply_701C::read_Voltage(Tango::Attribute &attr)
 {
-    DEBUG_STREAM << "PowerSupply_701C::read_Voltage(Tango::Attribute &attr) entering... " << endl;
+    //DEBUG_STREAM << "PowerSupply_701C::read_Voltage(Tango::Attribute &attr) entering... " << endl;
     /*----- PROTECTED REGION ID(PowerSupply_701C::read_Voltage) ENABLED START -----*/
     //	Set the attribute value
     attr.set_value(attr_Voltage_read);
@@ -515,8 +515,10 @@ Tango::DevShort PowerSupply_701C::check_adc_output()
                 return -1;
             }
 
-            string stateStr = {reply[0],reply[1]};
-            string replyVoltage;
+            //string stateStr = {reply[0],reply[1]};
+			string stateStr;
+			stateStr.push_back(reply[0]); stateStr.push_back(reply[1]);
+			string replyVoltage;
 
             if (stateStr==OK)
             {
@@ -621,7 +623,10 @@ void PowerSupply_701C::checkPSState()
         char errorbyte,statebyte;
         DEBUG_STREAM << "Request size: " << reply.size() << endl;
 
-        string stateStr = {reply[0],reply[1]};
+		//string stateStr = {reply[0],reply[1]};
+		string stateStr;
+		stateStr.push_back(reply[0]); stateStr.push_back(reply[1]);
+
         if (stateStr==OK)
         {
             char checkSum;
@@ -701,22 +706,22 @@ void PowerSupply_701C::checkSocketState()
     Tango::DeviceData outputCom;
 
     try {
+		// ????? command_inout("State") or other command for exception
         outputCom = socketProxy->command_inout("State");
         outputCom >> stateSocket;
-
-        if (stateSocket==Tango::OFF)
-        {
-            DEBUG_STREAM << " Socket " << socket << " is OFF" << endl;
-            isSocketOn = false;
-            set_state(Tango::OFF);
-            set_status("Device is OFF");
-        }
-        else if (stateSocket==Tango::ON) {
-            DEBUG_STREAM << " Socket " << socket << " is ON" << endl;
-            isSocketOn = true;
-            set_state(Tango::ON);
-            set_status("Device is ON");
-        }
+		if (stateSocket == Tango::ON) {
+			DEBUG_STREAM << " Socket " << socket << " is ON" << endl;
+			isSocketOn = true;
+			set_state(Tango::ON);
+			set_status("Device is ON");
+		}
+        else if (stateSocket == Tango::OFF || stateSocket == Tango::FAULT)
+		{
+			DEBUG_STREAM << " Socket " << socket << " is OFF" << endl;
+			isSocketOn = false;
+			set_state(Tango::OFF);
+			set_status("Device is OFF or Socket is FAULT");
+		}
     } catch (Tango::DevFailed &e) {
         Tango::Except::print_exception(e);
         set_state(Tango::FAULT);
