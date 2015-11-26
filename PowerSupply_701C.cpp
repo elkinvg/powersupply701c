@@ -334,7 +334,7 @@ void PowerSupply_701C::write_attr_hardware(TANGO_UNUSED(vector<long> &attr_list)
         set_state(Tango::FAULT);
         set_status("Can't connect to socket " + socket);
         return;
-    } // throw ??????????
+    } // throw ???
 
     checkPSState();
 
@@ -378,13 +378,13 @@ void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
 
     // from setvoltage
     //    checkSocketState();
-    if (!isSocketOn)  return; // throw in write_attr_hardware ??????????
+    if (!isSocketOn)  return; // throw in write_attr_hardware ???
 
     //    checkPSState();
 
-    // timeout?????? for device
+    // timeout??? for device
 
-	// if isActive || isExternalControl || isVoltageFromOutComp is false ???????
+	// if isActive || isExternalControl || isVoltageFromOutComp is false ???
     if (isActive && isExternalControl && isVoltageFromOutComp)
     {
         string reply,commandToPS,checkSumChr;
@@ -394,7 +394,7 @@ void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
         char* instVolt = reinterpret_cast<char*>(&writeVal);
         char tmp; tmp = instVolt[0];instVolt[0]= instVolt[1];instVolt[1]=tmp;
 
-        commandToPS = "#4U" + writeVal; // big-endian ?????????
+        commandToPS = "#4U" + writeVal; // big-endian ???
 
         checkSumChr = calcCheckSum(commandToPS);
         commandToPS += checkSumChr;
@@ -405,15 +405,25 @@ void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
 //            voltage = w_val;
 //            *attr_Voltage_read = voltage;
 //            attr_Voltage_write = voltage;
-            *attr_Voltage_read = w_val; // ??????? READ нужно здесь?
+            *attr_Voltage_read = w_val; // ??? READ нужно здесь?
             attr_Voltage_write = w_val;
-        } // ?????? if reply!=OK
+        } // ??? if reply!=OK
 
     } // from setvoltage
     else {
-        if (!isActive) charging_on(); // ???????
-        if (!isExternalControl) return; // ???? throw? FAULT or OFF
-        if (!isVoltageFromOutComp) return; // ????? throw? FAULT or OFF
+        if (!isActive) charging_on(); // ???
+		if (!isExternalControl)
+		{
+			set_state(Tango::DISABLE);
+			set_status("isExternalControl is FALSE");
+			return; // ??? throw? FAULT or OFF
+		}
+        if (!isVoltageFromOutComp)
+		{
+			set_state(Tango::DISABLE);
+			set_status("isVoltageFromOutComp is FALSE");
+			return; // ??? throw? FAULT or OFF
+		}
     }
     /*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::write_Voltage
 }
@@ -448,11 +458,11 @@ void PowerSupply_701C::charging_on()
 
     //	Add your own code
     checkSocketState();
-    if (!isSocketOn)  return; // ????????? throw ??? write_attr_hardware
+    if (!isSocketOn)  return; // ??? throw write_attr_hardware
 
     checkPSState();
 
-    // timeout?????? for device
+    // timeout??? for device
 
     chargingOnOrOff(CHARGINGONCOMM);
 
@@ -476,7 +486,7 @@ void PowerSupply_701C::charging_off()
 
     checkPSState();
 
-    // timeout?????? for device
+    // timeout??? for device
 
     chargingOnOrOff(CHARGINGOFFCOMM);
 
@@ -502,9 +512,9 @@ Tango::DevShort PowerSupply_701C::check_adc_output()
 
     checkPSState();
 
-    // timeout?????? for device
+    // timeout??? for device
 
-    try { // if isActive || isExternalControl || isVoltageFromOutComp is false ???????
+    try { // if isActive || isExternalControl || isVoltageFromOutComp is false ???
         if (isActive && isExternalControl && isVoltageFromOutComp)
         {
             string reply = toSocketWriteAndRead(OUTPUTADC);
@@ -544,7 +554,7 @@ Tango::DevShort PowerSupply_701C::check_adc_output()
                         return -1;
                     }
 
-                    // ??????? big-endian ?????????
+                    // ??? big-endian ?
                     char* instVolt = reinterpret_cast<char*>(&outVoltage);
                     instVolt[0]=replyVoltage[0];
                     instVolt[1]=replyVoltage[1];
@@ -652,7 +662,7 @@ void PowerSupply_701C::checkPSState()
 
                 statebyte = replyStatus[3];
                 errorbyte = replyStatus[4];
-                // ????????????????????? check statebyte & errorbyte
+                // ??? check statebyte & errorbyte
                 checkStateByte(statebyte);
                 checkErrorByte(errorbyte);
             }
@@ -706,7 +716,7 @@ void PowerSupply_701C::checkSocketState()
     Tango::DeviceData outputCom;
 
     try {
-		// ????? command_inout("State") or other command for exception
+		// ??? command_inout("State") or other command for exception
         outputCom = socketProxy->command_inout("State");
         outputCom >> stateSocket;
 		if (stateSocket == Tango::ON) {
@@ -731,7 +741,7 @@ void PowerSupply_701C::checkSocketState()
 
 void PowerSupply_701C::checkErrorByte(char byte)
 {
-    // ????????????????????? check errorbyte
+    // ??? check errorbyte
     if ((1) & byte)
     {
         set_state(Tango::FAULT);
@@ -791,7 +801,7 @@ string PowerSupply_701C::toSocketWriteAndRead(string command)
 
 void PowerSupply_701C::chargingOnOrOff(string command)
 {
-    try { // if isActive || isExternalControl is false ???????
+    try { // if isActive || isExternalControl is false ???
         if (isActive && isExternalControl)
         {
             string reply;
