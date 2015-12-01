@@ -385,8 +385,9 @@ void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
     // timeout??? for device
 
 	// if isActive || isExternalControl || isVoltageFromOutComp is false ???
-    if (isActive && isExternalControl && isVoltageFromOutComp)
-    {
+    //if (isActive && isExternalControl && isVoltageFromOutComp)
+	if (isExternalControl && isVoltageFromOutComp)
+	{
         string reply,commandToPS,checkSumChr;
 
         //convert little-endian to big-endian
@@ -411,7 +412,7 @@ void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
 
     } // from setvoltage
     else {
-        if (!isActive) charging_on(); // ???
+        //if (!isActive) charging_on(); // ???
 		if (!isExternalControl)
 		{
 			set_state(Tango::DISABLE);
@@ -515,7 +516,8 @@ Tango::DevShort PowerSupply_701C::check_adc_output()
     // timeout??? for device
 
     try { // if isActive || isExternalControl || isVoltageFromOutComp is false ???
-        if (isActive && isExternalControl && isVoltageFromOutComp)
+        //if (isActive && isExternalControl && isVoltageFromOutComp)
+		if (isExternalControl && isVoltageFromOutComp)
         {
             string reply = toSocketWriteAndRead(OUTPUTADC);
 
@@ -802,8 +804,9 @@ string PowerSupply_701C::toSocketWriteAndRead(string command)
 void PowerSupply_701C::chargingOnOrOff(string command)
 {
     try { // if isActive || isExternalControl is false ???
-        if (isActive && isExternalControl)
-        {
+        //if (isActive && isExternalControl)
+		if (isExternalControl)
+		{
             string reply;
             reply = toSocketWriteAndRead(command);
             if (reply==OK) {
