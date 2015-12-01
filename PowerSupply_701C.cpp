@@ -809,10 +809,14 @@ void PowerSupply_701C::chargingOnOrOff(string command)
             if (reply==OK) {
                 if (command==CHARGINGOFFCOMM) {
                     DEBUG_STREAM << " Charging OFF " << endl;
+                    set_state(Tango::ON);
+                    set_status("Device is ON");
                     isActive = false;
                 }
                 if (command==CHARGINGONCOMM) {
                     DEBUG_STREAM << " Charging ON " << endl;
+                    set_state(Tango::RUNNING);
+                    set_status("Charging capacitor");
                     isActive = true;
                 }
 
