@@ -64,7 +64,7 @@ class VoltageAttrib: public Tango::Attr
 {
 public:
 	VoltageAttrib():Attr("Voltage",
-			Tango::DEV_SHORT, Tango::READ_WRITE) {};
+			Tango::DEV_USHORT, Tango::READ_WRITE) {};
 	~VoltageAttrib() {};
 	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
 		{(static_cast<PowerSupply_701C *>(dev))->read_Voltage(att);}

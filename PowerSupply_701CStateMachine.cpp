@@ -45,8 +45,8 @@ static const char *RcsId = "$Id:  $";
 //  ON       |  
 //  OFF      |  
 //  FAULT    |  
-//  RUNNING  |
 //  DISABLE  |  
+//  RUNNING  |  charging capacitor
 
 
 namespace PowerSupply_701C_ns

@@ -47,7 +47,7 @@ static const char *RcsId = "$Id:  $";
 
 /**
  *  PowerSupply_701C class description:
- *
+ *    
  */
 
 //================================================================
@@ -66,7 +66,7 @@ static const char *RcsId = "$Id:  $";
 //================================================================
 //  Attributes managed is:
 //================================================================
-//  Voltage  |  Tango::DevShort	Scalar
+//  Voltage  |  Tango::DevUShort	Scalar
 //================================================================
 
 namespace PowerSupply_701C_ns
@@ -85,27 +85,27 @@ namespace PowerSupply_701C_ns
  */
 //--------------------------------------------------------
 PowerSupply_701C::PowerSupply_701C(Tango::DeviceClass *cl, string &s)
-    : TANGO_BASE_CLASS(cl, s.c_str())
+ : TANGO_BASE_CLASS(cl, s.c_str())
 {
-    /*----- PROTECTED REGION ID(PowerSupply_701C::constructor_1) ENABLED START -----*/
+	/*----- PROTECTED REGION ID(PowerSupply_701C::constructor_1) ENABLED START -----*/
     init_device();
 
     /*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::constructor_1
 }
 //--------------------------------------------------------
 PowerSupply_701C::PowerSupply_701C(Tango::DeviceClass *cl, const char *s)
-    : TANGO_BASE_CLASS(cl, s)
+ : TANGO_BASE_CLASS(cl, s)
 {
-    /*----- PROTECTED REGION ID(PowerSupply_701C::constructor_2) ENABLED START -----*/
+	/*----- PROTECTED REGION ID(PowerSupply_701C::constructor_2) ENABLED START -----*/
     init_device();
 
     /*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::constructor_2
 }
 //--------------------------------------------------------
 PowerSupply_701C::PowerSupply_701C(Tango::DeviceClass *cl, const char *s, const char *d)
-    : TANGO_BASE_CLASS(cl, s, d)
+ : TANGO_BASE_CLASS(cl, s, d)
 {
-    /*----- PROTECTED REGION ID(PowerSupply_701C::constructor_3) ENABLED START -----*/
+	/*----- PROTECTED REGION ID(PowerSupply_701C::constructor_3) ENABLED START -----*/
     init_device();
 
     /*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::constructor_3
@@ -119,14 +119,14 @@ PowerSupply_701C::PowerSupply_701C(Tango::DeviceClass *cl, const char *s, const 
 //--------------------------------------------------------
 void PowerSupply_701C::delete_device()
 {
-    DEBUG_STREAM << "PowerSupply_701C::delete_device() " << device_name << endl;
-    /*----- PROTECTED REGION ID(PowerSupply_701C::delete_device) ENABLED START -----*/
+	DEBUG_STREAM << "PowerSupply_701C::delete_device() " << device_name << endl;
+	/*----- PROTECTED REGION ID(PowerSupply_701C::delete_device) ENABLED START -----*/
 
     //	Delete device allocated objects
     //elkin
     delete socketProxy;
     /*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::delete_device
-    delete[] attr_Voltage_read;
+	delete[] attr_Voltage_read;
 }
 
 //--------------------------------------------------------
@@ -137,23 +137,23 @@ void PowerSupply_701C::delete_device()
 //--------------------------------------------------------
 void PowerSupply_701C::init_device()
 {
-    DEBUG_STREAM << "PowerSupply_701C::init_device() create device " << device_name << endl;
-    /*----- PROTECTED REGION ID(PowerSupply_701C::init_device_before) ENABLED START -----*/
+	DEBUG_STREAM << "PowerSupply_701C::init_device() create device " << device_name << endl;
+	/*----- PROTECTED REGION ID(PowerSupply_701C::init_device_before) ENABLED START -----*/
 
     //	Initialization before get_device_property() call
 
     /*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::init_device_before
+	
 
+	//	Get the device properties from database
+	get_device_property();
+	
+	attr_Voltage_read = new Tango::DevUShort[1];
+	//	No longer if mandatory property not set. 
+	if (mandatoryNotDefined)
+		return;
 
-    //	Get the device properties from database
-    get_device_property();
-
-    attr_Voltage_read = new Tango::DevShort[1];
-    //	No longer if mandatory property not set.
-    if (mandatoryNotDefined)
-        return;
-
-    /*----- PROTECTED REGION ID(PowerSupply_701C::init_device) ENABLED START -----*/
+	/*----- PROTECTED REGION ID(PowerSupply_701C::init_device) ENABLED START -----*/
 
     //	Initialize device
 #ifndef SUPC11
@@ -198,47 +198,47 @@ void PowerSupply_701C::init_device()
 //--------------------------------------------------------
 void PowerSupply_701C::get_device_property()
 {
-    /*----- PROTECTED REGION ID(PowerSupply_701C::get_device_property_before) ENABLED START -----*/
+	/*----- PROTECTED REGION ID(PowerSupply_701C::get_device_property_before) ENABLED START -----*/
 
     //	Initialize property data members
 
     /*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::get_device_property_before
 
-    mandatoryNotDefined = false;
+	mandatoryNotDefined = false;
 
-    //	Read device properties from database.
-    Tango::DbData	dev_prop;
-    dev_prop.push_back(Tango::DbDatum("Socket"));
+	//	Read device properties from database.
+	Tango::DbData	dev_prop;
+	dev_prop.push_back(Tango::DbDatum("Socket"));
 
-    //	is there at least one property to be read ?
-    if (dev_prop.size()>0)
-    {
-        //	Call database and extract values
-        if (Tango::Util::instance()->_UseDb==true)
-            get_db_device()->get_property(dev_prop);
+	//	is there at least one property to be read ?
+	if (dev_prop.size()>0)
+	{
+		//	Call database and extract values
+		if (Tango::Util::instance()->_UseDb==true)
+			get_db_device()->get_property(dev_prop);
+	
+		//	get instance on PowerSupply_701CClass to get class property
+		Tango::DbDatum	def_prop, cl_prop;
+		PowerSupply_701CClass	*ds_class =
+			(static_cast<PowerSupply_701CClass *>(get_device_class()));
+		int	i = -1;
 
-        //	get instance on PowerSupply_701CClass to get class property
-        Tango::DbDatum	def_prop, cl_prop;
-        PowerSupply_701CClass	*ds_class =
-                (static_cast<PowerSupply_701CClass *>(get_device_class()));
-        int	i = -1;
+		//	Try to initialize Socket from class property
+		cl_prop = ds_class->get_class_property(dev_prop[++i].name);
+		if (cl_prop.is_empty()==false)	cl_prop  >>  socket;
+		else {
+			//	Try to initialize Socket from default device value
+			def_prop = ds_class->get_default_device_property(dev_prop[i].name);
+			if (def_prop.is_empty()==false)	def_prop  >>  socket;
+		}
+		//	And try to extract Socket value from database
+		if (dev_prop[i].is_empty()==false)	dev_prop[i]  >>  socket;
+		//	Property StartDsPath is mandatory, check if has been defined in database.
+		check_mandatory_property(cl_prop, dev_prop[i]);
 
-        //	Try to initialize Socket from class property
-        cl_prop = ds_class->get_class_property(dev_prop[++i].name);
-        if (cl_prop.is_empty()==false)	cl_prop  >>  socket;
-        else {
-            //	Try to initialize Socket from default device value
-            def_prop = ds_class->get_default_device_property(dev_prop[i].name);
-            if (def_prop.is_empty()==false)	def_prop  >>  socket;
-        }
-        //	And try to extract Socket value from database
-        if (dev_prop[i].is_empty()==false)	dev_prop[i]  >>  socket;
-        //	Property StartDsPath is mandatory, check if has been defined in database.
-        check_mandatory_property(cl_prop, dev_prop[i]);
+	}
 
-    }
-
-    /*----- PROTECTED REGION ID(PowerSupply_701C::get_device_property_after) ENABLED START -----*/
+	/*----- PROTECTED REGION ID(PowerSupply_701C::get_device_property_after) ENABLED START -----*/
 
     //	Check device property data members init
 
@@ -252,24 +252,24 @@ void PowerSupply_701C::get_device_property()
 //--------------------------------------------------------
 void PowerSupply_701C::check_mandatory_property(Tango::DbDatum &class_prop, Tango::DbDatum &dev_prop)
 {
-    //	Check if all properties are empty
-    if (class_prop.is_empty() && dev_prop.is_empty())
-    {
-        TangoSys_OMemStream	tms;
-        tms << endl <<"Property \'" << dev_prop.name;
-        if (Tango::Util::instance()->_UseDb==true)
-            tms << "\' is mandatory but not defined in database";
-        else
-            tms << "\' is mandatory but cannot be defined without database";
-        string	status(get_status());
-        status += tms.str();
-        set_status(status);
-        mandatoryNotDefined = true;
-        /*----- PROTECTED REGION ID(PowerSupply_701C::check_mandatory_property) ENABLED START -----*/
+	//	Check if all properties are empty
+	if (class_prop.is_empty() && dev_prop.is_empty())
+	{
+		TangoSys_OMemStream	tms;
+		tms << endl <<"Property \'" << dev_prop.name;
+		if (Tango::Util::instance()->_UseDb==true)
+			tms << "\' is mandatory but not defined in database";
+		else
+			tms << "\' is mandatory but cannot be defined without database";
+		string	status(get_status());
+		status += tms.str();
+		set_status(status);
+		mandatoryNotDefined = true;
+		/*----- PROTECTED REGION ID(PowerSupply_701C::check_mandatory_property) ENABLED START -----*/
         cerr << tms.str() << " for " << device_name << endl;
 
         /*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::check_mandatory_property
-    }
+	}
 }
 
 
@@ -281,16 +281,16 @@ void PowerSupply_701C::check_mandatory_property(Tango::DbDatum &class_prop, Tang
 //--------------------------------------------------------
 void PowerSupply_701C::always_executed_hook()
 {
-    //DEBUG_STREAM << "PowerSupply_701C::always_executed_hook()  " << device_name << endl;
-    if (mandatoryNotDefined)
-    {
-        string	status(get_status());
-        Tango::Except::throw_exception(
-                    (const char *)"PROPERTY_NOT_SET",
-                    status.c_str(),
-                    (const char *)"PowerSupply_701C::always_executed_hook()");
-    }
-    /*----- PROTECTED REGION ID(PowerSupply_701C::always_executed_hook) ENABLED START -----*/
+	DEBUG_STREAM << "PowerSupply_701C::always_executed_hook()  " << device_name << endl;
+	if (mandatoryNotDefined)
+	{
+		string	status(get_status());
+		Tango::Except::throw_exception(
+					(const char *)"PROPERTY_NOT_SET",
+					status.c_str(),
+					(const char *)"PowerSupply_701C::always_executed_hook()");
+	}
+	/*----- PROTECTED REGION ID(PowerSupply_701C::always_executed_hook) ENABLED START -----*/
 
     //	code always executed before all requests
 
@@ -305,8 +305,8 @@ void PowerSupply_701C::always_executed_hook()
 //--------------------------------------------------------
 void PowerSupply_701C::read_attr_hardware(TANGO_UNUSED(vector<long> &attr_list))
 {
-    //DEBUG_STREAM << "PowerSupply_701C::read_attr_hardware(vector<long> &attr_list) entering... " << endl;
-    /*----- PROTECTED REGION ID(PowerSupply_701C::read_attr_hardware) ENABLED START -----*/
+	DEBUG_STREAM << "PowerSupply_701C::read_attr_hardware(vector<long> &attr_list) entering... " << endl;
+	/*----- PROTECTED REGION ID(PowerSupply_701C::read_attr_hardware) ENABLED START -----*/
 
     //	Add your own code
 
@@ -320,8 +320,8 @@ void PowerSupply_701C::read_attr_hardware(TANGO_UNUSED(vector<long> &attr_list))
 //--------------------------------------------------------
 void PowerSupply_701C::write_attr_hardware(TANGO_UNUSED(vector<long> &attr_list))
 {
-    DEBUG_STREAM << "PowerSupply_701C::write_attr_hardware(vector<long> &attr_list) entering... " << endl;
-    /*----- PROTECTED REGION ID(PowerSupply_701C::write_attr_hardware) ENABLED START -----*/
+	DEBUG_STREAM << "PowerSupply_701C::write_attr_hardware(vector<long> &attr_list) entering... " << endl;
+	/*----- PROTECTED REGION ID(PowerSupply_701C::write_attr_hardware) ENABLED START -----*/
 
     //	Add your own code
 
@@ -344,16 +344,16 @@ void PowerSupply_701C::write_attr_hardware(TANGO_UNUSED(vector<long> &attr_list)
 //--------------------------------------------------------
 /**
  *	Read attribute Voltage related method
- *	Description:
+ *	Description: 
  *
- *	Data type:	Tango::DevShort
+ *	Data type:	Tango::DevUShort
  *	Attr type:	Scalar
  */
 //--------------------------------------------------------
 void PowerSupply_701C::read_Voltage(Tango::Attribute &attr)
 {
-    //DEBUG_STREAM << "PowerSupply_701C::read_Voltage(Tango::Attribute &attr) entering... " << endl;
-    /*----- PROTECTED REGION ID(PowerSupply_701C::read_Voltage) ENABLED START -----*/
+	DEBUG_STREAM << "PowerSupply_701C::read_Voltage(Tango::Attribute &attr) entering... " << endl;
+	/*----- PROTECTED REGION ID(PowerSupply_701C::read_Voltage) ENABLED START -----*/
     //	Set the attribute value
     attr.set_value(attr_Voltage_read);
 
@@ -362,19 +362,19 @@ void PowerSupply_701C::read_Voltage(Tango::Attribute &attr)
 //--------------------------------------------------------
 /**
  *	Write attribute Voltage related method
- *	Description:
+ *	Description: 
  *
- *	Data type:	Tango::DevShort
+ *	Data type:	Tango::DevUShort
  *	Attr type:	Scalar
  */
 //--------------------------------------------------------
 void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
 {
-    DEBUG_STREAM << "PowerSupply_701C::write_Voltage(Tango::WAttribute &attr) entering... " << endl;
-    //	Retrieve write value
-    Tango::DevShort	w_val;
-    attr.get_write_value(w_val);
-    /*----- PROTECTED REGION ID(PowerSupply_701C::write_Voltage) ENABLED START -----*/
+	DEBUG_STREAM << "PowerSupply_701C::write_Voltage(Tango::WAttribute &attr) entering... " << endl;
+	//	Retrieve write value
+	Tango::DevUShort	w_val;
+	attr.get_write_value(w_val);
+	/*----- PROTECTED REGION ID(PowerSupply_701C::write_Voltage) ENABLED START -----*/
 
     // from setvoltage
     //    checkSocketState();
@@ -438,7 +438,7 @@ void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
 //--------------------------------------------------------
 void PowerSupply_701C::add_dynamic_attributes()
 {
-    /*----- PROTECTED REGION ID(PowerSupply_701C::add_dynamic_attributes) ENABLED START -----*/
+	/*----- PROTECTED REGION ID(PowerSupply_701C::add_dynamic_attributes) ENABLED START -----*/
 
     //	Add your own code to create and add dynamic attributes if any
 
@@ -454,8 +454,8 @@ void PowerSupply_701C::add_dynamic_attributes()
 //--------------------------------------------------------
 void PowerSupply_701C::charging_on()
 {
-    DEBUG_STREAM << "PowerSupply_701C::ChargingOn()  - " << device_name << endl;
-    /*----- PROTECTED REGION ID(PowerSupply_701C::charging_on) ENABLED START -----*/
+	DEBUG_STREAM << "PowerSupply_701C::ChargingOn()  - " << device_name << endl;
+	/*----- PROTECTED REGION ID(PowerSupply_701C::charging_on) ENABLED START -----*/
 
     //	Add your own code
     checkSocketState();
@@ -478,8 +478,8 @@ void PowerSupply_701C::charging_on()
 //--------------------------------------------------------
 void PowerSupply_701C::charging_off()
 {
-    DEBUG_STREAM << "PowerSupply_701C::ChargingOff()  - " << device_name << endl;
-    /*----- PROTECTED REGION ID(PowerSupply_701C::charging_off) ENABLED START -----*/
+	DEBUG_STREAM << "PowerSupply_701C::ChargingOff()  - " << device_name << endl;
+	/*----- PROTECTED REGION ID(PowerSupply_701C::charging_off) ENABLED START -----*/
 
     //	Add your own code
     checkSocketState();
@@ -501,11 +501,11 @@ void PowerSupply_701C::charging_off()
  *	@returns Voltage on the capacitors
  */
 //--------------------------------------------------------
-Tango::DevShort PowerSupply_701C::check_adc_output()
+Tango::DevUShort PowerSupply_701C::check_adc_output()
 {
-    Tango::DevShort argout;
-    DEBUG_STREAM << "PowerSupply_701C::CheckAdcOutput()  - " << device_name << endl;
-    /*----- PROTECTED REGION ID(PowerSupply_701C::check_adc_output) ENABLED START -----*/
+	Tango::DevUShort argout;
+	DEBUG_STREAM << "PowerSupply_701C::CheckAdcOutput()  - " << device_name << endl;
+	/*----- PROTECTED REGION ID(PowerSupply_701C::check_adc_output) ENABLED START -----*/
 
     //	Add your own code
     checkSocketState();
@@ -579,7 +579,7 @@ Tango::DevShort PowerSupply_701C::check_adc_output()
     }
 
     /*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::check_adc_output
-    return argout;
+	return argout;
 }
 //--------------------------------------------------------
 /**
@@ -590,7 +590,7 @@ Tango::DevShort PowerSupply_701C::check_adc_output()
 //--------------------------------------------------------
 void PowerSupply_701C::add_dynamic_commands()
 {
-    /*----- PROTECTED REGION ID(PowerSupply_701C::add_dynamic_commands) ENABLED START -----*/
+	/*----- PROTECTED REGION ID(PowerSupply_701C::add_dynamic_commands) ENABLED START -----*/
 
     //	Add your own code to create and add dynamic commands if any
 

@@ -133,7 +133,7 @@ public:
 
 //	Attribute data members
 public:
-	Tango::DevShort	*attr_Voltage_read;
+	Tango::DevUShort	*attr_Voltage_read;
 
 //	Constructors and destructors
 public:
@@ -210,7 +210,7 @@ public:
  *	Attribute Voltage related methods
  *	Description: 
  *
- *	Data type:	Tango::DevShort
+ *	Data type:	Tango::DevUShort
  *	Attr type:	Scalar
  */
 	virtual void read_Voltage(Tango::Attribute &attr);
@@ -251,7 +251,7 @@ public:
 	 *
 	 *	@returns Voltage on the capacitors
 	 */
-	virtual Tango::DevShort check_adc_output();
+	virtual Tango::DevUShort check_adc_output();
 	virtual bool is_CheckAdcOutput_allowed(const CORBA::Any &any);
 
 

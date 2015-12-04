@@ -587,7 +587,7 @@ void PowerSupply_701CClass::command_factory()
 	//	Command CheckAdcOutput
 	CheckAdcOutputClass	*pCheckAdcOutputCmd =
 		new CheckAdcOutputClass("CheckAdcOutput",
-			Tango::DEV_VOID, Tango::DEV_SHORT,
+			Tango::DEV_VOID, Tango::DEV_USHORT,
 			"",
 			"Voltage on the capacitors",
 			Tango::OPERATOR);
