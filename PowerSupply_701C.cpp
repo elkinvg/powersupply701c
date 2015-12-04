@@ -119,7 +119,7 @@ PowerSupply_701C::PowerSupply_701C(Tango::DeviceClass *cl, const char *s, const 
 //--------------------------------------------------------
 void PowerSupply_701C::delete_device()
 {
-	DEBUG_STREAM << "PowerSupply_701C::delete_device() " << device_name << endl;
+	//DEBUG_STREAM << "PowerSupply_701C::delete_device() " << device_name << endl;
 	/*----- PROTECTED REGION ID(PowerSupply_701C::delete_device) ENABLED START -----*/
 
     //	Delete device allocated objects
@@ -281,7 +281,7 @@ void PowerSupply_701C::check_mandatory_property(Tango::DbDatum &class_prop, Tang
 //--------------------------------------------------------
 void PowerSupply_701C::always_executed_hook()
 {
-	DEBUG_STREAM << "PowerSupply_701C::always_executed_hook()  " << device_name << endl;
+	//DEBUG_STREAM << "PowerSupply_701C::always_executed_hook()  " << device_name << endl;
 	if (mandatoryNotDefined)
 	{
 		string	status(get_status());
@@ -305,7 +305,7 @@ void PowerSupply_701C::always_executed_hook()
 //--------------------------------------------------------
 void PowerSupply_701C::read_attr_hardware(TANGO_UNUSED(vector<long> &attr_list))
 {
-	DEBUG_STREAM << "PowerSupply_701C::read_attr_hardware(vector<long> &attr_list) entering... " << endl;
+	//DEBUG_STREAM << "PowerSupply_701C::read_attr_hardware(vector<long> &attr_list) entering... " << endl;
 	/*----- PROTECTED REGION ID(PowerSupply_701C::read_attr_hardware) ENABLED START -----*/
 
     //	Add your own code
@@ -320,7 +320,7 @@ void PowerSupply_701C::read_attr_hardware(TANGO_UNUSED(vector<long> &attr_list))
 //--------------------------------------------------------
 void PowerSupply_701C::write_attr_hardware(TANGO_UNUSED(vector<long> &attr_list))
 {
-	DEBUG_STREAM << "PowerSupply_701C::write_attr_hardware(vector<long> &attr_list) entering... " << endl;
+	//DEBUG_STREAM << "PowerSupply_701C::write_attr_hardware(vector<long> &attr_list) entering... " << endl;
 	/*----- PROTECTED REGION ID(PowerSupply_701C::write_attr_hardware) ENABLED START -----*/
 
     //	Add your own code
@@ -352,7 +352,7 @@ void PowerSupply_701C::write_attr_hardware(TANGO_UNUSED(vector<long> &attr_list)
 //--------------------------------------------------------
 void PowerSupply_701C::read_Voltage(Tango::Attribute &attr)
 {
-	DEBUG_STREAM << "PowerSupply_701C::read_Voltage(Tango::Attribute &attr) entering... " << endl;
+	//DEBUG_STREAM << "PowerSupply_701C::read_Voltage(Tango::Attribute &attr) entering... " << endl;
 	/*----- PROTECTED REGION ID(PowerSupply_701C::read_Voltage) ENABLED START -----*/
     //	Set the attribute value
     attr.set_value(attr_Voltage_read);
@@ -370,7 +370,7 @@ void PowerSupply_701C::read_Voltage(Tango::Attribute &attr)
 //--------------------------------------------------------
 void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
 {
-	DEBUG_STREAM << "PowerSupply_701C::write_Voltage(Tango::WAttribute &attr) entering... " << endl;
+	//DEBUG_STREAM << "PowerSupply_701C::write_Voltage(Tango::WAttribute &attr) entering... " << endl;
 	//	Retrieve write value
 	Tango::DevUShort	w_val;
 	attr.get_write_value(w_val);
@@ -509,7 +509,7 @@ Tango::DevUShort PowerSupply_701C::check_adc_output()
 
     //	Add your own code
     checkSocketState();
-    if (!isSocketOn)  return -1;
+    if (!isSocketOn)  return 65535;
 
     checkPSState();
 
@@ -525,7 +525,7 @@ Tango::DevUShort PowerSupply_701C::check_adc_output()
                 DEBUG_STREAM << "Reply is incorrect " << endl;
                 set_state(Tango::FAULT);
                 set_status("Reply is incorrect");
-                return -1;
+                return 65535;
             }
 
             //string stateStr = {reply[0],reply[1]};
@@ -543,7 +543,7 @@ Tango::DevUShort PowerSupply_701C::check_adc_output()
                     DEBUG_STREAM << "Reply is incorrect " << endl;
                     set_state(Tango::FAULT);
                     set_status("Reply is incorrect");
-                    return -1;
+                    return 65535;
                 }
                 if (replyVoltage[0]='!')
                 {
@@ -553,7 +553,7 @@ Tango::DevUShort PowerSupply_701C::check_adc_output()
                         DEBUG_STREAM << "Checksum of reply is incorrect " << endl;
                         set_state(Tango::FAULT);
                         set_status("Checksum is incorrect");
-                        return -1;
+                        return 65535;
                     }
 
                     // ??? big-endian ?
@@ -567,7 +567,7 @@ Tango::DevUShort PowerSupply_701C::check_adc_output()
             {
                 // process
                 errorReply(stateStr);
-                return -1;
+                return 65535;
             }
         }
     }  catch (Tango::DevFailed &e) {
@@ -575,7 +575,7 @@ Tango::DevUShort PowerSupply_701C::check_adc_output()
         Tango::Except::print_exception(e);
         set_state(Tango::FAULT);
         set_status("Can't connect to socket " + socket);
-        return -1;
+        return 65535;
     }
 
     /*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::check_adc_output
@@ -703,8 +703,9 @@ void PowerSupply_701C::errorReply(string ERROR)
     }
     if (ERROR==ERR3) {
         set_state(Tango::FAULT);
-        set_status("Exceeding the allowable value for voltage (max=500V) (Input command) ");
-        return;
+        //set_status("Exceeding the allowable value for voltage (max=500V) (Input command) ");
+		set_status("Exceeding the allowable value for voltage (Input command) ");
+		return;
     }
     if (ERROR==ERR4) {
         set_state(Tango::FAULT);
