@@ -39,6 +39,7 @@
 #define PowerSupply_701C_H
 
 #include <tango.h>
+#include <tangosocket.h>
 
 #if _MSC_VER > 1700
 #define SUPC11
@@ -78,7 +79,7 @@ public:
 private:
 
     // elkin
-    Tango::DeviceProxy *socketProxy;
+    TangoSocket *tangoSocket;
     // state bytes
     bool isExternalControl;
     bool isActive; // if charging on
@@ -276,7 +277,7 @@ private:
     void checkErrorByte(char byte);
     void checkStateByte(char byte);
 
-    string toSocketWriteAndRead(string command); // send command to socket
+//    string toSocketWriteAndRead(string command); // send command to socket
     void chargingOnOrOff(string command);
 #ifdef SUPC11
     static constexpr char calcCheckSumCommand(char a, char b,char c) {return a+b+c;}

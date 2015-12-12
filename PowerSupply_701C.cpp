@@ -124,7 +124,8 @@ void PowerSupply_701C::delete_device()
 
     //	Delete device allocated objects
     //elkin
-    delete socketProxy;
+    //delete socketProxy; //DELETE
+    delete tangoSocket;
     /*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::delete_device
 	delete[] attr_Voltage_read;
 }
@@ -173,9 +174,11 @@ void PowerSupply_701C::init_device()
 
         DEBUG_STREAM << "Socket:    " << socket << endl;
 
-        socketProxy = new Tango::DeviceProxy(socket);
-        socketProxy->command_inout("Init");
+//        socketProxy = new Tango::DeviceProxy(socket); // DELETE
+//        socketProxy->command_inout("Init"); // DELETE
+        tangoSocket = new TangoSocket(socket);
 
+//        checkSocketState(); // DELETE
         checkSocketState();
 
         if (isSocketOn) checkPSState();
@@ -327,14 +330,15 @@ void PowerSupply_701C::write_attr_hardware(TANGO_UNUSED(vector<long> &attr_list)
 
     //elkin
     checkSocketState();
+	if (!isSocketOn) return;
 
-    if (!isSocketOn) {
-        DEBUG_STREAM << "write_attr_hardware Socket error" << endl;
-        //Tango::Except::throw_exception((const char *) "Socket error", "Couldn't connect to socket " + socket, "Bad socket reply");
-        set_state(Tango::FAULT);
-        set_status("Can't connect to socket " + socket);
-        return;
-    } // throw ???
+//    if (!isSocketOn) {
+//        DEBUG_STREAM << "write_attr_hardware Socket error" << endl;
+//        //Tango::Except::throw_exception((const char *) "Socket error", "Couldn't connect to socket " + socket, "Bad socket reply");
+//        set_state(Tango::FAULT);
+//        set_status("Can't connect to socket " + socket);
+//        return;
+//    } // throw ???
 
     checkPSState();
 
@@ -378,8 +382,7 @@ void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
 
     // from setvoltage
     //    checkSocketState();
-    if (!isSocketOn)  return; // throw in write_attr_hardware ???
-
+	if (!isSocketOn) return;
     //    checkPSState();
 
     // timeout??? for device
@@ -400,7 +403,7 @@ void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
         checkSumChr = calcCheckSum(commandToPS);
         commandToPS += checkSumChr;
 
-        reply = toSocketWriteAndRead(commandToPS);
+        reply = tangoSocket->toSocketWriteAndRead(commandToPS);
 
         if (reply==OK) {
 //            voltage = w_val;
@@ -519,7 +522,7 @@ Tango::DevUShort PowerSupply_701C::check_adc_output()
         //if (isActive && isExternalControl && isVoltageFromOutComp)
 		if (isExternalControl && isVoltageFromOutComp)
         {
-            string reply = toSocketWriteAndRead(OUTPUTADC);
+            string reply = tangoSocket->toSocketWriteAndRead(OUTPUTADC);
 
             if (reply.size()<2) {
                 DEBUG_STREAM << "Reply is incorrect " << endl;
@@ -619,11 +622,11 @@ void PowerSupply_701C::checkPSState()
     try
     {
         DEBUG_STREAM << "checkPSState()" <<  endl;
-        socketProxy->ping();
+//        socketProxy->ping();
 
         string reply,replyStatus;
 
-        reply = toSocketWriteAndRead(CHECKPSSTATE);
+        reply = tangoSocket->toSocketWriteAndRead(CHECKPSSTATE);
 
         if (reply.size()<2) {
             DEBUG_STREAM << "Reply is incorrect " << endl;
@@ -715,31 +718,14 @@ void PowerSupply_701C::errorReply(string ERROR)
 
 void PowerSupply_701C::checkSocketState()
 {
-    Tango::DevState stateSocket;
-    Tango::DeviceData outputCom;
+    isSocketOn = tangoSocket->checkSocketState();
 
-    try {
-		// ??? command_inout("State") or other command for exception
-        outputCom = socketProxy->command_inout("State");
-        outputCom >> stateSocket;
-		if (stateSocket == Tango::ON) {
-			DEBUG_STREAM << " Socket " << socket << " is ON" << endl;
-			isSocketOn = true;
-			set_state(Tango::ON);
-			set_status("Device is ON");
-		}
-        else if (stateSocket == Tango::OFF || stateSocket == Tango::FAULT)
-		{
-			DEBUG_STREAM << " Socket " << socket << " is OFF" << endl;
-			isSocketOn = false;
-			set_state(Tango::OFF);
-			set_status("Device is OFF or Socket is FAULT");
-		}
-    } catch (Tango::DevFailed &e) {
-        Tango::Except::print_exception(e);
-        set_state(Tango::FAULT);
-        set_status("Can't connect to socket " + socket);
+	if (!isSocketOn)
+	{
+        set_state(Tango::OFF);
+        set_status("Device is OFF or Socket is FAULT");
     }
+
 }
 
 void PowerSupply_701C::checkErrorByte(char byte)
@@ -785,22 +771,6 @@ void PowerSupply_701C::checkStateByte(char byte)
     isVoltageFromOutComp = (1 << 6) & byte;
 }
 
-string PowerSupply_701C::toSocketWriteAndRead(string command)
-{
-    Tango::DeviceData input, output;
-    string reply;
-
-    try {
-        input << command;
-        output = socketProxy->command_inout("WriteAndRead",input);
-
-        output >> reply;
-    } catch (Tango::DevFailed &e) {
-        Tango::Except::print_exception(e);
-        reply = "?";
-    }
-    return reply;
-}
 
 void PowerSupply_701C::chargingOnOrOff(string command)
 {
@@ -809,7 +779,7 @@ void PowerSupply_701C::chargingOnOrOff(string command)
 		if (isExternalControl)
 		{
             string reply;
-            reply = toSocketWriteAndRead(command);
+            reply = tangoSocket->toSocketWriteAndRead(command);
             if (reply==OK) {
                 if (command==CHARGINGOFFCOMM) {
                     DEBUG_STREAM << " Charging OFF " << endl;
