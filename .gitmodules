@@ -1,1 +1,4 @@
 
+[submodule "sock"]
+	path = sock
+	url = https://github.com/elkinvg/tangosocket.git
