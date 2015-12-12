@@ -330,6 +330,7 @@ void PowerSupply_701C::write_attr_hardware(TANGO_UNUSED(vector<long> &attr_list)
 
     //elkin
     checkSocketState();
+	if (!isSocketOn) return;
 
 //    if (!isSocketOn) {
 //        DEBUG_STREAM << "write_attr_hardware Socket error" << endl;
@@ -381,8 +382,7 @@ void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
 
     // from setvoltage
     //    checkSocketState();
-    if (!isSocketOn)  return; // throw in write_attr_hardware ???
-
+	if (!isSocketOn) return;
     //    checkPSState();
 
     // timeout??? for device
@@ -720,42 +720,12 @@ void PowerSupply_701C::checkSocketState()
 {
     isSocketOn = tangoSocket->checkSocketState();
 
-    if(isSocketOn)
-    {
-        set_state(Tango::ON);
-        set_status("Device is ON");
-    }
-    else
-    {
+	if (!isSocketOn)
+	{
         set_state(Tango::OFF);
         set_status("Device is OFF or Socket is FAULT");
     }
 
-//    Tango::DevState stateSocket;
-//    Tango::DeviceData outputCom;
-
-//    try {
-//        // ??? command_inout("State") or other command for exception
-//        outputCom = socketProxy->command_inout("State");
-//        outputCom >> stateSocket;
-//        if (stateSocket == Tango::ON) {
-//            DEBUG_STREAM << " Socket " << socket << " is ON" << endl;
-//            isSocketOn = true;
-//            set_state(Tango::ON);
-//            set_status("Device is ON");
-//        }
-//        else if (stateSocket == Tango::OFF || stateSocket == Tango::FAULT)
-//        {
-//            DEBUG_STREAM << " Socket " << socket << " is OFF" << endl;
-//            isSocketOn = false;
-//            set_state(Tango::OFF);
-//            set_status("Device is OFF or Socket is FAULT");
-//        }
-//    } catch (Tango::DevFailed &e) {
-//        Tango::Except::print_exception(e);
-//        set_state(Tango::FAULT);
-//        set_status("Can't connect to socket " + socket);
-//    }
 }
 
 void PowerSupply_701C::checkErrorByte(char byte)
@@ -801,22 +771,6 @@ void PowerSupply_701C::checkStateByte(char byte)
     isVoltageFromOutComp = (1 << 6) & byte;
 }
 
-//string PowerSupply_701C::toSocketWriteAndRead(string command)
-//{
-//    Tango::DeviceData input, output;
-//    string reply;
-
-//    try {
-//        input << command;
-//        output = socketProxy->command_inout("WriteAndRead",input);
-
-//        output >> reply;
-//    } catch (Tango::DevFailed &e) {
-//        Tango::Except::print_exception(e);
-//        reply = "?";
-//    }
-//    return reply;
-//}
 
 void PowerSupply_701C::chargingOnOrOff(string command)
 {
