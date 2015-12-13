@@ -166,8 +166,8 @@ void PowerSupply_701C::init_device()
     isVoltageFromOutComp = false;
     isVoltageMatchesToGiven = false;
 
-    set_state(Tango::ON);
-    set_status("Device is ON");
+    set_state(Tango::OFF);
+    set_status("Device is OFF");
     attr_Voltage_read[0] = 0;
 
     try {
@@ -769,6 +769,23 @@ void PowerSupply_701C::checkStateByte(char byte)
     isActive = (1 << 1) & byte;
     isVoltageMatchesToGiven =  (1 << 3) & byte;
     isVoltageFromOutComp = (1 << 6) & byte;
+
+	if (isExternalControl) {
+		if (isActive) {
+			set_state(Tango::RUNNING);
+			set_status("Charging capacitor");
+		}
+		else {
+			set_state(Tango::ON);
+			set_status("Device is ON");
+		}
+	}
+	else
+	{
+		set_state(Tango::DISABLE);
+		set_status("ExternalControl is inactive");
+		return; // ??? throw? FAULT or OFF
+	}
 }
 
 
