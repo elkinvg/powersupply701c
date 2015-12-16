@@ -394,7 +394,7 @@ void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
         string reply,commandToPS,checkSumChr;
 
         //convert little-endian to big-endian
-        Tango::DevShort writeVal = w_val;
+        Tango::DevUShort writeVal = w_val;
         char* instVolt = reinterpret_cast<char*>(&writeVal);
         char tmp; tmp = instVolt[0];instVolt[0]= instVolt[1];instVolt[1]=tmp;
 
