@@ -461,8 +461,8 @@ void PowerSupply_701C::charging_on()
 	/*----- PROTECTED REGION ID(PowerSupply_701C::charging_on) ENABLED START -----*/
 
     //	Add your own code
-    checkSocketState();
-    if (!isSocketOn)  return; // ??? throw write_attr_hardware
+    //checkSocketState();
+    //if (!isSocketOn)  return; // ??? throw write_attr_hardware
 
     checkPSState();
 
@@ -485,8 +485,8 @@ void PowerSupply_701C::charging_off()
 	/*----- PROTECTED REGION ID(PowerSupply_701C::charging_off) ENABLED START -----*/
 
     //	Add your own code
-    checkSocketState();
-    if (!isSocketOn)  return;
+    //checkSocketState();
+    //if (!isSocketOn)  return;
 
     checkPSState();
 
@@ -511,8 +511,8 @@ Tango::DevUShort PowerSupply_701C::check_adc_output()
 	/*----- PROTECTED REGION ID(PowerSupply_701C::check_adc_output) ENABLED START -----*/
 
     //	Add your own code
-    checkSocketState();
-    if (!isSocketOn)  return 65535;
+    //checkSocketState();
+    //if (!isSocketOn)  return 65535;
 
     checkPSState();
 

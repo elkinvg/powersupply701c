@@ -90,7 +90,8 @@ bool PowerSupply_701C::is_ChargingOn_allowed(TANGO_UNUSED(const CORBA::Any &any)
 {
 	//	Not any excluded states for ChargingOn command.
 	/*----- PROTECTED REGION ID(PowerSupply_701C::ChargingOnStateAllowed) ENABLED START -----*/
-	
+	checkSocketState();
+	if (!isSocketOn)  return false;
 	/*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::ChargingOnStateAllowed
 	return true;
 }
@@ -105,7 +106,8 @@ bool PowerSupply_701C::is_ChargingOff_allowed(TANGO_UNUSED(const CORBA::Any &any
 {
 	//	Not any excluded states for ChargingOff command.
 	/*----- PROTECTED REGION ID(PowerSupply_701C::ChargingOffStateAllowed) ENABLED START -----*/
-	
+	checkSocketState();
+	if (!isSocketOn)  return false;
 	/*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::ChargingOffStateAllowed
 	return true;
 }
@@ -120,7 +122,8 @@ bool PowerSupply_701C::is_CheckAdcOutput_allowed(TANGO_UNUSED(const CORBA::Any &
 {
 	//	Not any excluded states for CheckAdcOutput command.
 	/*----- PROTECTED REGION ID(PowerSupply_701C::CheckAdcOutputStateAllowed) ENABLED START -----*/
-	
+	checkSocketState();
+	if (!isSocketOn)  return false;
 	/*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::CheckAdcOutputStateAllowed
 	return true;
 }
