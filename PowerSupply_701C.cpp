@@ -772,8 +772,17 @@ void PowerSupply_701C::checkStateByte(char byte)
 
 	if (isExternalControl) {
 		if (isActive) {
-			set_state(Tango::RUNNING);
-			set_status("Charging capacitor");
+			if (isVoltageMatchesToGiven) { // ??? должен выключить режим зарядки зарядки 
+				chargingOnOrOff(CHARGINGOFFCOMM);  // timeout??? for device
+				if (!isActive) {
+					set_state(Tango::ON);
+					set_status("Device is ON. Voltage matches to given");
+				}
+			}
+			else {
+				set_state(Tango::RUNNING);
+				set_status("Charging capacitor");
+			}
 		}
 		else {
 			set_state(Tango::ON);
