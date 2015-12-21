@@ -411,6 +411,7 @@ void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
 //            attr_Voltage_write = voltage;
             *attr_Voltage_read = w_val; // ??? READ нужно здесь?
             attr_Voltage_write = w_val;
+			INFO_STREAM << " It sets new voltage: " << w_val << "V" << endl;
         } // ??? if reply!=OK
 
     } // from setvoltage
@@ -735,24 +736,28 @@ void PowerSupply_701C::checkErrorByte(char byte)
     {
         set_state(Tango::FAULT);
         set_status("Overheat of powersupply ");
+		FATAL_STREAM << "Overheat of powersupply on " << device_name << endl;
         // перегрев источника питания
     }
     if ((1 << 1) & byte)
     {
         set_state(Tango::FAULT);
         set_status("Voltage of powersupply below normal. Problem with power source ");
+		FATAL_STREAM << "Voltage of powersupply below normal. Problem with power source on " << device_name << endl;
         // Напряжение питания ниже нормы (проблемы с трехфазным сетевым питанием)
     }
     if ((1 << 2) & byte)
     {
         set_state(Tango::FAULT);
         set_status("short circuit");
+		FATAL_STREAM << "Short circuit on " << device_name << endl;
         // короткое замыкание
     }
     if ((1 << 3) & byte)
     {
         set_state(Tango::FAULT);
         set_status("break of power");
+		FATAL_STREAM << "break of power on " << device_name << endl;
         // обрыв нагрузки
     }
     if ((1 << 6) & byte)
@@ -777,6 +782,7 @@ void PowerSupply_701C::checkStateByte(char byte)
 				if (!isActive) {
 					set_state(Tango::ON);
 					set_status("Device is ON. Voltage matches to given");
+					INFO_STREAM << " Capacitor is charged on " << device_name << endl;
 				}
 			}
 			else {
@@ -808,13 +814,13 @@ void PowerSupply_701C::chargingOnOrOff(string command)
             reply = tangoSocket->toSocketWriteAndRead(command);
             if (reply==OK) {
                 if (command==CHARGINGOFFCOMM) {
-                    DEBUG_STREAM << " Charging OFF " << endl;
+                    INFO_STREAM << " Charging OFF " << device_name << endl;
                     set_state(Tango::ON);
                     set_status("Device is ON");
                     isActive = false;
                 }
                 if (command==CHARGINGONCOMM) {
-                    DEBUG_STREAM << " Charging ON " << endl;
+					INFO_STREAM << " Charging ON " << device_name << endl;
                     set_state(Tango::RUNNING);
                     set_status("Charging capacitor");
                     isActive = true;
