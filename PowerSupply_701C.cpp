@@ -340,7 +340,7 @@ void PowerSupply_701C::write_attr_hardware(TANGO_UNUSED(vector<long> &attr_list)
 //        return;
 //    } // throw ???
 
-    checkPSState();
+    if(!ifStateIsOnOrMoving()) checkPSState();
 
     /*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::write_attr_hardware
 }
@@ -465,7 +465,7 @@ void PowerSupply_701C::charging_on()
     //checkSocketState();
     //if (!isSocketOn)  return; // ??? throw write_attr_hardware
 
-    checkPSState();
+	if(!ifStateIsOnOrMoving()) checkPSState();
 
     // timeout??? for device
 
@@ -489,7 +489,7 @@ void PowerSupply_701C::charging_off()
     //checkSocketState();
     //if (!isSocketOn)  return;
 
-    checkPSState();
+	if(!ifStateIsOnOrMoving()) checkPSState();
 
     // timeout??? for device
 
@@ -515,7 +515,7 @@ Tango::DevUShort PowerSupply_701C::check_adc_output()
     //checkSocketState();
     //if (!isSocketOn)  return 65535;
 
-    checkPSState();
+	if(!ifStateIsOnOrMoving()) checkPSState();
 
     // timeout??? for device
 
@@ -678,6 +678,7 @@ void PowerSupply_701C::checkPSState()
             // process
             errorReply(stateStr);
         }
+		Sleep(500); // for serialport
     }
     catch (Tango::DevFailed &e)
     {
@@ -803,6 +804,11 @@ void PowerSupply_701C::checkStateByte(char byte)
 	}
 }
 
+bool PowerSupply_701C::ifStateIsOnOrMoving()
+{
+	Tango::DevState Stt = get_state();
+	return (Stt == Tango::ON || Stt == Tango::MOVING) ? true : false;
+}
 
 void PowerSupply_701C::chargingOnOrOff(string command)
 {
