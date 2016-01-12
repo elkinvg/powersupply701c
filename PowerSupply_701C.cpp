@@ -528,7 +528,7 @@ Tango::DevUShort PowerSupply_701C::check_adc_output()
             if (reply.size()<2) {
                 DEBUG_STREAM << "Reply is incorrect " << endl;
                 set_state(Tango::FAULT);
-                set_status("Reply is incorrect");
+                set_status("Reply is incorrect. reply.size<2");
                 return 65535;
             }
 
@@ -546,7 +546,7 @@ Tango::DevUShort PowerSupply_701C::check_adc_output()
                 if (replyVoltage.size()<6) {
                     DEBUG_STREAM << "Reply is incorrect " << endl;
                     set_state(Tango::FAULT);
-                    set_status("Reply is incorrect");
+                    set_status("Reply is incorrect. (replyVoltage)");
                     return 65535;
                 }
                 if (replyVoltage[0]='!')
@@ -630,9 +630,9 @@ void PowerSupply_701C::checkPSState()
         reply = tangoSocket->toSocketWriteAndRead(CHECKPSSTATE);
 
         if (reply.size()<2) {
-            DEBUG_STREAM << "Reply is incorrect " << endl;
+            DEBUG_STREAM << "Reply is incorrect. " << endl;
             set_state(Tango::FAULT);
-            set_status("Reply is incorrect");
+            set_status("Reply is incorrect. reply.size<2");
             return;
         }
 
@@ -652,7 +652,7 @@ void PowerSupply_701C::checkPSState()
             if (replyStatus.size()<6) {
                 DEBUG_STREAM << "Reply is incorrect " << endl;
                 set_state(Tango::FAULT);
-                set_status("Reply is incorrect");
+                set_status("Reply is incorrect. (replyVoltage)");
                 return;
             }
             if (replyStatus[0]='!')
@@ -678,7 +678,13 @@ void PowerSupply_701C::checkPSState()
             // process
             errorReply(stateStr);
         }
-		Sleep(500); // for serialport
+
+#ifdef __unix__
+        sleep(0.5);
+#else
+        Sleep(500); // for serialport
+#endif
+
     }
     catch (Tango::DevFailed &e)
     {
