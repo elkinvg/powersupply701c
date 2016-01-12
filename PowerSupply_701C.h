@@ -279,6 +279,7 @@ private:
 
 //    string toSocketWriteAndRead(string command); // send command to socket
     void chargingOnOrOff(string command);
+	bool ifStateIsOnOrMoving();
 #ifdef SUPC11
     static constexpr char calcCheckSumCommand(char a, char b,char c) {return a+b+c;}
 #else
