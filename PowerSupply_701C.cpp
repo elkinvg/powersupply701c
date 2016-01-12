@@ -395,10 +395,13 @@ void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
 
         //convert little-endian to big-endian
         Tango::DevUShort writeVal = w_val;
-        char* instVolt = reinterpret_cast<char*>(&writeVal);
-        char tmp; tmp = instVolt[0];instVolt[0]= instVolt[1];instVolt[1]=tmp;
+        unsigned char* instVolt = reinterpret_cast<unsigned char*>(&writeVal);
+        unsigned char tmp; tmp = instVolt[0];instVolt[0]= instVolt[1];instVolt[1]=tmp;
 
-        commandToPS = "#4U" + writeVal; // big-endian ???
+		commandToPS = '#';
+		commandToPS.push_back(4);
+		commandToPS += 'U';
+		commandToPS += writeVal; // big-endian ???
 
         checkSumChr = calcCheckSum(commandToPS);
         commandToPS += checkSumChr;
@@ -540,7 +543,7 @@ Tango::DevUShort PowerSupply_701C::check_adc_output()
             if (stateStr==OK)
             {
                 Tango::DevShort outVoltage;
-                char checkSum;
+                unsigned char checkSum;
                 std::copy(reply.begin()+2,reply.end(),std::back_inserter(replyVoltage));
 
                 if (replyVoltage.size()<6) {
@@ -561,7 +564,7 @@ Tango::DevUShort PowerSupply_701C::check_adc_output()
                     }
 
                     // ??? big-endian ?
-                    char* instVolt = reinterpret_cast<char*>(&outVoltage);
+                    unsigned char* instVolt = reinterpret_cast<unsigned char*>(&outVoltage);
                     instVolt[0]=replyVoltage[0];
                     instVolt[1]=replyVoltage[1];
                     argout = outVoltage;
@@ -605,12 +608,12 @@ void PowerSupply_701C::add_dynamic_commands()
 
 //	Additional Methods
 
-char PowerSupply_701C::calcCheckSum(string bytes)
+unsigned char PowerSupply_701C::calcCheckSum(string bytes)
 {
     //short size = bytes.size();
 //    char sum{0};
 //    for (auto& i: bytes) sum += i;
-    char sum = 0;
+    unsigned char sum = 0;
     for (unsigned short i=0;i<bytes.size();i++)
     {
         sum+=bytes[i];
@@ -637,7 +640,7 @@ void PowerSupply_701C::checkPSState()
         }
 
         DEBUG_STREAM << "checkPSState_Reply:" << reply << endl;
-        char errorbyte,statebyte;
+        unsigned char errorbyte,statebyte;
         DEBUG_STREAM << "Request size: " << reply.size() << endl;
 
 		//string stateStr = {reply[0],reply[1]};
@@ -646,7 +649,7 @@ void PowerSupply_701C::checkPSState()
 
         if (stateStr==OK)
         {
-            char checkSum;
+            unsigned char checkSum;
             std::copy(reply.begin()+2,reply.end(),std::back_inserter(replyStatus));
 
             if (replyStatus.size()<6) {
@@ -736,7 +739,7 @@ void PowerSupply_701C::checkSocketState()
 
 }
 
-void PowerSupply_701C::checkErrorByte(char byte)
+void PowerSupply_701C::checkErrorByte(unsigned char byte)
 {
     // ??? check errorbyte
     if ((1) & byte)
@@ -775,7 +778,7 @@ void PowerSupply_701C::checkErrorByte(char byte)
     }
 }
 
-void PowerSupply_701C::checkStateByte(char byte)
+void PowerSupply_701C::checkStateByte(unsigned char byte)
 {
     isExternalControl = (1) & byte;
     isActive = (1 << 1) & byte;
@@ -858,20 +861,27 @@ void PowerSupply_701C::chargingOnOrOff(string command)
 #ifndef SUPC11
 void PowerSupply_701C::initStringCommand()
 {
+	string dot2;
+	dot2.push_back('#');dot2.push_back(2);
+
     CHARGINGONCOMM.clear();
-    CHARGINGONCOMM = "#2C";
+    CHARGINGONCOMM = CHARGINGONCOMM + dot2;
+	CHARGINGONCOMM.push_back('C');
     CHARGINGONCOMM.push_back(calcCheckSumCommand(CHARGINGONCOMM));
 
     CHARGINGOFFCOMM.clear();
-    CHARGINGOFFCOMM = "#2D";
+    CHARGINGOFFCOMM = CHARGINGOFFCOMM + dot2;
+	CHARGINGOFFCOMM.push_back('D');
     CHARGINGOFFCOMM.push_back(calcCheckSumCommand(CHARGINGOFFCOMM));
 
     CHECKPSSTATE.clear();
-    CHECKPSSTATE = "#2E";
+    CHECKPSSTATE = CHECKPSSTATE + dot2;
+	CHECKPSSTATE.push_back('E');
     CHECKPSSTATE.push_back(calcCheckSumCommand(CHECKPSSTATE));
 
     OUTPUTADC.clear();
-    OUTPUTADC = "#2A";
+    OUTPUTADC = OUTPUTADC + dot2;
+	OUTPUTADC.push_back('A');
     OUTPUTADC.push_back(calcCheckSumCommand(OUTPUTADC));
 
     OK = "OK";
