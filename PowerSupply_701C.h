@@ -97,10 +97,10 @@ private:
 
 #ifdef SUPC11
     // const commands
-    const string CHARGINGONCOMM = {'#','2','C',calcCheckSumCommand('#','2','C')};
-    const string CHARGINGOFFCOMM = {'#','2','D',calcCheckSumCommand('#','2','D')};
-    const string CHECKPSSTATE = {'#','2','E',calcCheckSumCommand('#','2','E')};
-    const string OUTPUTADC = {'#','2','A',calcCheckSumCommand('#','2','A')};
+    const string CHARGINGONCOMM = {'#',2,'C',calcCheckSumCommand('#',2,'C')};
+    const string CHARGINGOFFCOMM = {'#',2,'D',calcCheckSumCommand('#',2,'D')};
+    const string CHECKPSSTATE = {'#',2,'E',calcCheckSumCommand('#',2,'E')};
+    const string OUTPUTADC = {'#',2,'A',calcCheckSumCommand('#',2,'A')};
     // const answers
     const string OK = "OK";     // is OK
     const string ERR0 = "E0";   // checksum error
@@ -269,22 +269,22 @@ public:
 //	Additional Method prototypes
     //elkin
 private:
-	unsigned char calcCheckSum(string bytes);
+    char calcCheckSum(string bytes);
     void checkPSState();
     void errorReply(string ERROR);
 
     void checkSocketState();
-    void checkErrorByte(unsigned char byte);
-    void checkStateByte(unsigned char byte);
+    void checkErrorByte(char byte);
+    void checkStateByte(char byte);
 
 //    string toSocketWriteAndRead(string command); // send command to socket
     void chargingOnOrOff(string command);
 	bool ifStateIsOnOrMoving();
 #ifdef SUPC11
-    static constexpr char calcCheckSumCommand(unsigned char a, unsigned  char b, unsigned char c) {return a+b+c;}
+    static constexpr char calcCheckSumCommand(char a, unsigned  char b, char c) {return a+b+c;}
 #else
     void initStringCommand();
-    static unsigned char calcCheckSumCommand(string command) {return command[0]+command[1]+command[2];}
+    static char calcCheckSumCommand(string command) {return command[0]+command[1]+command[2];}
 #endif
 //protected:
     Tango::DevShort voltage;
