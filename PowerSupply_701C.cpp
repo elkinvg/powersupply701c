@@ -683,7 +683,7 @@ void PowerSupply_701C::checkPSState()
         }
 
 #ifdef __unix__
-        sleep(0.5);
+        usleep(500);
 #else
         Sleep(500); // for serialport
 #endif

@@ -97,10 +97,10 @@ private:
 
 #ifdef SUPC11
     // const commands
-    const string CHARGINGONCOMM = {'#','2','C',calcCheckSumCommand('#','2','C')};
-    const string CHARGINGOFFCOMM = {'#','2','D',calcCheckSumCommand('#','2','D')};
-    const string CHECKPSSTATE = {'#','2','E',calcCheckSumCommand('#','2','E')};
-    const string OUTPUTADC = {'#','2','A',calcCheckSumCommand('#','2','A')};
+    const string CHARGINGONCOMM = {'#',2,'C',calcCheckSumCommand('#',2,'C')};
+    const string CHARGINGOFFCOMM = {'#',2,'D',calcCheckSumCommand('#',2,'D')};
+    const string CHECKPSSTATE = {'#',2,'E',calcCheckSumCommand('#',2,'E')};
+    const string OUTPUTADC = {'#',2,'A',calcCheckSumCommand('#',2,'A')};
     // const answers
     const string OK = "OK";     // is OK
     const string ERR0 = "E0";   // checksum error
