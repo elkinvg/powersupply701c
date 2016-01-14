@@ -174,14 +174,15 @@ void PowerSupply_701C::init_device()
 
         DEBUG_STREAM << "Socket:    " << socket << endl;
 
-//        socketProxy = new Tango::DeviceProxy(socket); // DELETE
-//        socketProxy->command_inout("Init"); // DELETE
         tangoSocket = new TangoSocket(socket);
 
-//        checkSocketState(); // DELETE
         checkSocketState();
 
-        if (isSocketOn) checkPSState();
+		if (isSocketOn)
+		{
+			checkPSState();
+			check_adc_output();
+		}
 
     } catch (Tango::DevFailed &e) {
         DEBUG_STREAM << "Can't connect to socket " << socket << endl;
@@ -421,7 +422,7 @@ void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
 //            voltage = w_val;
 //            *attr_Voltage_read = voltage;
 //            attr_Voltage_write = voltage;
-            *attr_Voltage_read = w_val; // ??? READ нужно здесь?
+            /**attr_Voltage_read = w_val;*/ // ??? READ нужно здесь?
             attr_Voltage_write = w_val;
 			INFO_STREAM << " It sets new voltage: " << w_val << "V" << endl;
         } // ??? if reply!=OK
@@ -580,6 +581,7 @@ Tango::DevUShort PowerSupply_701C::check_adc_output()
                     instVolt[1]=replyVoltage[3]; // ???
                     DEBUG_STREAM << "Reply Voltage:" << outVoltage << endl;
                     argout = outVoltage;
+					attr_Voltage_read[0] = outVoltage; // ???
                 }
             }
             else if (reply[0]=='E')
@@ -596,6 +598,11 @@ Tango::DevUShort PowerSupply_701C::check_adc_output()
         set_status("Can't connect to socket " + socket);
         return 65535;
     }
+#ifdef __unix__
+	usleep(300);
+#else
+	Sleep(300); // for serialport
+#endif
 
     /*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::check_adc_output
 	return argout;
@@ -695,9 +702,9 @@ void PowerSupply_701C::checkPSState()
         }
 
 #ifdef __unix__
-        usleep(500);
+        usleep(300);
 #else
-        Sleep(500); // for serialport
+        Sleep(300); // for serialport
 #endif
 
     }
@@ -799,7 +806,7 @@ void PowerSupply_701C::checkStateByte(char byte)
 
 	if (isExternalControl) {
 		if (isActive) {
-			if (isVoltageMatchesToGiven) { // ??? должен выключить режим зарядки зарядки 
+			if (isVoltageMatchesToGiven) { // ??? должен выключить режим зарядки
 				chargingOnOrOff(CHARGINGOFFCOMM);  // timeout??? for device
 				if (!isActive) {
 					set_state(Tango::ON);
