@@ -389,7 +389,10 @@ void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
 
 	// if isActive || isExternalControl || isVoltageFromOutComp is false ???
     //if (isActive && isExternalControl && isVoltageFromOutComp)
-	if (isExternalControl && isVoltageFromOutComp)
+    DEBUG_STREAM << "WRITE VOLTAGE isExternalControl:" << isExternalControl << endl;
+    DEBUG_STREAM << "WRITE VOLTAGE isVoltageFromOutComp:" << isVoltageFromOutComp << endl;
+    //if (isExternalControl && isVoltageFromOutComp)
+    if (isExternalControl)
 	{
         string reply,commandToPS,checkSumChr;
 
@@ -401,12 +404,18 @@ void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
 		commandToPS = '#';
 		commandToPS.push_back(4);
 		commandToPS += 'U';
-		commandToPS += writeVal; // big-endian ???
+        //commandToPS += writeVal; // big-endian ???
+        commandToPS.push_back(instVolt[0]);
+        commandToPS.push_back(instVolt[1]);
 
         checkSumChr = calcCheckSum(commandToPS);
         commandToPS += checkSumChr;
 
+        DEBUG_STREAM << "WRITE VOLTAGE" << endl;
+
         reply = tangoSocket->toSocketWriteAndReadBinary(commandToPS);
+
+        DEBUG_STREAM << "WRITE VOLTAGE reply:" << reply << endl;
 
         if (reply==OK) {
 //            voltage = w_val;
@@ -565,8 +574,11 @@ Tango::DevUShort PowerSupply_701C::check_adc_output()
 
                     // ??? big-endian ?
                     char* instVolt = reinterpret_cast<char*>(&outVoltage);
-                    instVolt[0]=replyVoltage[0];
-                    instVolt[1]=replyVoltage[1];
+//                    instVolt[0]=replyVoltage[0];
+//                    instVolt[1]=replyVoltage[1];
+                    instVolt[0]=replyVoltage[4]; // ???
+                    instVolt[1]=replyVoltage[3]; // ???
+                    DEBUG_STREAM << "Reply Voltage:" << outVoltage << endl;
                     argout = outVoltage;
                 }
             }
@@ -815,8 +827,11 @@ void PowerSupply_701C::checkStateByte(char byte)
 
 bool PowerSupply_701C::ifStateIsOnOrMoving()
 {
-	Tango::DevState Stt = get_state();
-	return (Stt == Tango::ON || Stt == Tango::MOVING) ? true : false;
+    Tango::DevState Stt = get_state();
+    return (Stt == Tango::ON || Stt == Tango::RUNNING) ? true : false;
+//    bool aaa = (Stt == Tango::ON || Stt == Tango::RUNNING) ? true : false;
+//    DEBUG_STREAM << "ifStateIsOnOrMoving():" << Stt << endl;
+//    return aaa;
 }
 
 void PowerSupply_701C::chargingOnOrOff(string command)
