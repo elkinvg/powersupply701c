@@ -395,8 +395,8 @@ void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
 
         //convert little-endian to big-endian
         Tango::DevUShort writeVal = w_val;
-        unsigned char* instVolt = reinterpret_cast<unsigned char*>(&writeVal);
-        unsigned char tmp; tmp = instVolt[0];instVolt[0]= instVolt[1];instVolt[1]=tmp;
+        char* instVolt = reinterpret_cast<char*>(&writeVal);
+        char tmp; tmp = instVolt[0];instVolt[0]= instVolt[1];instVolt[1]=tmp;
 
 		commandToPS = '#';
 		commandToPS.push_back(4);
@@ -406,7 +406,7 @@ void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
         checkSumChr = calcCheckSum(commandToPS);
         commandToPS += checkSumChr;
 
-        reply = tangoSocket->toSocketWriteAndRead(commandToPS);
+        reply = tangoSocket->toSocketWriteAndReadBinary(commandToPS);
 
         if (reply==OK) {
 //            voltage = w_val;
@@ -526,7 +526,7 @@ Tango::DevUShort PowerSupply_701C::check_adc_output()
         //if (isActive && isExternalControl && isVoltageFromOutComp)
 		if (isExternalControl && isVoltageFromOutComp)
         {
-            string reply = tangoSocket->toSocketWriteAndRead(OUTPUTADC);
+            string reply = tangoSocket->toSocketWriteAndReadBinary(OUTPUTADC);
 
             if (reply.size()<2) {
                 DEBUG_STREAM << "Reply is incorrect " << endl;
@@ -543,7 +543,7 @@ Tango::DevUShort PowerSupply_701C::check_adc_output()
             if (stateStr==OK)
             {
                 Tango::DevShort outVoltage;
-                unsigned char checkSum;
+                char checkSum;
                 std::copy(reply.begin()+2,reply.end(),std::back_inserter(replyVoltage));
 
                 if (replyVoltage.size()<6) {
@@ -564,7 +564,7 @@ Tango::DevUShort PowerSupply_701C::check_adc_output()
                     }
 
                     // ??? big-endian ?
-                    unsigned char* instVolt = reinterpret_cast<unsigned char*>(&outVoltage);
+                    char* instVolt = reinterpret_cast<char*>(&outVoltage);
                     instVolt[0]=replyVoltage[0];
                     instVolt[1]=replyVoltage[1];
                     argout = outVoltage;
@@ -608,12 +608,12 @@ void PowerSupply_701C::add_dynamic_commands()
 
 //	Additional Methods
 
-unsigned char PowerSupply_701C::calcCheckSum(string bytes)
+char PowerSupply_701C::calcCheckSum(string bytes)
 {
     //short size = bytes.size();
 //    char sum{0};
 //    for (auto& i: bytes) sum += i;
-    unsigned char sum = 0;
+    char sum = 0;
     for (unsigned short i=0;i<bytes.size();i++)
     {
         sum+=bytes[i];
@@ -630,7 +630,7 @@ void PowerSupply_701C::checkPSState()
 
         string reply,replyStatus;
 
-        reply = tangoSocket->toSocketWriteAndRead(CHECKPSSTATE);
+        reply = tangoSocket->toSocketWriteAndReadBinary(CHECKPSSTATE);
 
         if (reply.size()<2) {
             DEBUG_STREAM << "Reply is incorrect. " << endl;
@@ -640,7 +640,7 @@ void PowerSupply_701C::checkPSState()
         }
 
         DEBUG_STREAM << "checkPSState_Reply:" << reply << endl;
-        unsigned char errorbyte,statebyte;
+        char errorbyte,statebyte;
         DEBUG_STREAM << "Request size: " << reply.size() << endl;
 
 		//string stateStr = {reply[0],reply[1]};
@@ -649,7 +649,7 @@ void PowerSupply_701C::checkPSState()
 
         if (stateStr==OK)
         {
-            unsigned char checkSum;
+            char checkSum;
             std::copy(reply.begin()+2,reply.end(),std::back_inserter(replyStatus));
 
             if (replyStatus.size()<6) {
@@ -739,7 +739,7 @@ void PowerSupply_701C::checkSocketState()
 
 }
 
-void PowerSupply_701C::checkErrorByte(unsigned char byte)
+void PowerSupply_701C::checkErrorByte(char byte)
 {
     // ??? check errorbyte
     if ((1) & byte)
@@ -778,7 +778,7 @@ void PowerSupply_701C::checkErrorByte(unsigned char byte)
     }
 }
 
-void PowerSupply_701C::checkStateByte(unsigned char byte)
+void PowerSupply_701C::checkStateByte(char byte)
 {
     isExternalControl = (1) & byte;
     isActive = (1 << 1) & byte;
@@ -826,7 +826,7 @@ void PowerSupply_701C::chargingOnOrOff(string command)
 		if (isExternalControl)
 		{
             string reply;
-            reply = tangoSocket->toSocketWriteAndRead(command);
+            reply = tangoSocket->toSocketWriteAndReadBinary(command);
             if (reply==OK) {
                 if (command==CHARGINGOFFCOMM) {
                     INFO_STREAM << " Charging OFF " << device_name << endl;
