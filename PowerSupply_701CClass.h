@@ -46,7 +46,7 @@
 #include <PowerSupply_701C.h>
 
 
-/*----- PROTECTED REGION END -----*/	//	PowerSupply_701CClass.h
+/*----- PROTECTED REGION END -----*/    //    PowerSupply_701CClass.h
 
 
 namespace PowerSupply_701C_ns
@@ -54,102 +54,138 @@ namespace PowerSupply_701C_ns
 /*----- PROTECTED REGION ID(PowerSupply_701CClass::classes for dynamic creation) ENABLED START -----*/
 
 
-/*----- PROTECTED REGION END -----*/	//	PowerSupply_701CClass::classes for dynamic creation
+/*----- PROTECTED REGION END -----*/    //    PowerSupply_701CClass::classes for dynamic creation
 
 //=========================================
-//	Define classes for attributes
+//    Define classes for attributes
 //=========================================
-//	Attribute Voltage class definition
+//    Attribute Voltage class definition
 class VoltageAttrib: public Tango::Attr
 {
 public:
-	VoltageAttrib():Attr("Voltage",
-			Tango::DEV_USHORT, Tango::READ_WRITE) {};
-	~VoltageAttrib() {};
-	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
-		{(static_cast<PowerSupply_701C *>(dev))->read_Voltage(att);}
-	virtual void write(Tango::DeviceImpl *dev,Tango::WAttribute &att)
-		{(static_cast<PowerSupply_701C *>(dev))->write_Voltage(att);}
-	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
-		{return (static_cast<PowerSupply_701C *>(dev))->is_Voltage_allowed(ty);}
+    VoltageAttrib():Attr("Voltage",
+            Tango::DEV_USHORT, Tango::READ_WRITE) {};
+    ~VoltageAttrib() {};
+    virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+        {(static_cast<PowerSupply_701C *>(dev))->read_Voltage(att);}
+    virtual void write(Tango::DeviceImpl *dev,Tango::WAttribute &att)
+        {(static_cast<PowerSupply_701C *>(dev))->write_Voltage(att);}
+    virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+        {return (static_cast<PowerSupply_701C *>(dev))->is_Voltage_allowed(ty);}
+};
+
+//    Attribute isExternalControl class definition
+class isExternalControlAttrib: public Tango::Attr
+{
+public:
+    isExternalControlAttrib():Attr("isExternalControl",
+            Tango::DEV_BOOLEAN, Tango::READ) {};
+    ~isExternalControlAttrib() {};
+    virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+        {(static_cast<PowerSupply_701C *>(dev))->read_isExternalControl(att);}
+    virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+        {return (static_cast<PowerSupply_701C *>(dev))->is_isExternalControl_allowed(ty);}
 };
 
 
 //=========================================
-//	Define classes for commands
+//    Define classes for commands
 //=========================================
-//	Command ChargingOn class definition
+//    Command ChargingOn class definition
 class ChargingOnClass : public Tango::Command
 {
 public:
-	ChargingOnClass(const char   *name,
-	               Tango::CmdArgType in,
-				   Tango::CmdArgType out,
-				   const char        *in_desc,
-				   const char        *out_desc,
-				   Tango::DispLevel  level)
-	:Command(name,in,out,in_desc,out_desc, level)	{};
+    ChargingOnClass(const char   *name,
+                   Tango::CmdArgType in,
+                   Tango::CmdArgType out,
+                   const char        *in_desc,
+                   const char        *out_desc,
+                   Tango::DispLevel  level)
+    :Command(name,in,out,in_desc,out_desc, level)    {};
 
-	ChargingOnClass(const char   *name,
-	               Tango::CmdArgType in,
-				   Tango::CmdArgType out)
-	:Command(name,in,out)	{};
-	~ChargingOnClass() {};
-	
-	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
-	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
-	{return (static_cast<PowerSupply_701C *>(dev))->is_ChargingOn_allowed(any);}
+    ChargingOnClass(const char   *name,
+                   Tango::CmdArgType in,
+                   Tango::CmdArgType out)
+    :Command(name,in,out)    {};
+    ~ChargingOnClass() {};
+    
+    virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
+    virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
+    {return (static_cast<PowerSupply_701C *>(dev))->is_ChargingOn_allowed(any);}
 };
 
-//	Command ChargingOff class definition
+//    Command ChargingOff class definition
 class ChargingOffClass : public Tango::Command
 {
 public:
-	ChargingOffClass(const char   *name,
-	               Tango::CmdArgType in,
-				   Tango::CmdArgType out,
-				   const char        *in_desc,
-				   const char        *out_desc,
-				   Tango::DispLevel  level)
-	:Command(name,in,out,in_desc,out_desc, level)	{};
+    ChargingOffClass(const char   *name,
+                   Tango::CmdArgType in,
+                   Tango::CmdArgType out,
+                   const char        *in_desc,
+                   const char        *out_desc,
+                   Tango::DispLevel  level)
+    :Command(name,in,out,in_desc,out_desc, level)    {};
 
-	ChargingOffClass(const char   *name,
-	               Tango::CmdArgType in,
-				   Tango::CmdArgType out)
-	:Command(name,in,out)	{};
-	~ChargingOffClass() {};
-	
-	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
-	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
-	{return (static_cast<PowerSupply_701C *>(dev))->is_ChargingOff_allowed(any);}
+    ChargingOffClass(const char   *name,
+                   Tango::CmdArgType in,
+                   Tango::CmdArgType out)
+    :Command(name,in,out)    {};
+    ~ChargingOffClass() {};
+    
+    virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
+    virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
+    {return (static_cast<PowerSupply_701C *>(dev))->is_ChargingOff_allowed(any);}
 };
 
-//	Command CheckAdcOutput class definition
+//    Command CheckAdcOutput class definition
 class CheckAdcOutputClass : public Tango::Command
 {
 public:
-	CheckAdcOutputClass(const char   *name,
-	               Tango::CmdArgType in,
-				   Tango::CmdArgType out,
-				   const char        *in_desc,
-				   const char        *out_desc,
-				   Tango::DispLevel  level)
-	:Command(name,in,out,in_desc,out_desc, level)	{};
+    CheckAdcOutputClass(const char   *name,
+                   Tango::CmdArgType in,
+                   Tango::CmdArgType out,
+                   const char        *in_desc,
+                   const char        *out_desc,
+                   Tango::DispLevel  level)
+    :Command(name,in,out,in_desc,out_desc, level)    {};
 
-	CheckAdcOutputClass(const char   *name,
-	               Tango::CmdArgType in,
-				   Tango::CmdArgType out)
-	:Command(name,in,out)	{};
-	~CheckAdcOutputClass() {};
-	
-	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
-	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
-	{return (static_cast<PowerSupply_701C *>(dev))->is_CheckAdcOutput_allowed(any);}
+    CheckAdcOutputClass(const char   *name,
+                   Tango::CmdArgType in,
+                   Tango::CmdArgType out)
+    :Command(name,in,out)    {};
+    ~CheckAdcOutputClass() {};
+    
+    virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
+    virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
+    {return (static_cast<PowerSupply_701C *>(dev))->is_CheckAdcOutput_allowed(any);}
+};
+
+//    Command CheckPSState class definition
+class CheckPSStateClass : public Tango::Command
+{
+public:
+    CheckPSStateClass(const char   *name,
+                   Tango::CmdArgType in,
+                   Tango::CmdArgType out,
+                   const char        *in_desc,
+                   const char        *out_desc,
+                   Tango::DispLevel  level)
+    :Command(name,in,out,in_desc,out_desc, level)    {};
+
+    CheckPSStateClass(const char   *name,
+                   Tango::CmdArgType in,
+                   Tango::CmdArgType out)
+    :Command(name,in,out)    {};
+    ~CheckPSStateClass() {};
+    
+    virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
+    virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
+    {return (static_cast<PowerSupply_701C *>(dev))->is_CheckPSState_allowed(any);}
 };
 
 
 /**
- *	The PowerSupply_701CClass singleton definition
+ *    The PowerSupply_701CClass singleton definition
  */
 
 #ifdef _TG_WINDOWS_
@@ -158,45 +194,45 @@ class __declspec(dllexport)  PowerSupply_701CClass : public Tango::DeviceClass
 class PowerSupply_701CClass : public Tango::DeviceClass
 #endif
 {
-	/*----- PROTECTED REGION ID(PowerSupply_701CClass::Additionnal DServer data members) ENABLED START -----*/
-	
-	
-	/*----- PROTECTED REGION END -----*/	//	PowerSupply_701CClass::Additionnal DServer data members
+    /*----- PROTECTED REGION ID(PowerSupply_701CClass::Additionnal DServer data members) ENABLED START -----*/
+    
+    
+    /*----- PROTECTED REGION END -----*/    //    PowerSupply_701CClass::Additionnal DServer data members
 
-	public:
-		//	write class properties data members
-		Tango::DbData	cl_prop;
-		Tango::DbData	cl_def_prop;
-		Tango::DbData	dev_def_prop;
-	
-		//	Method prototypes
-		static PowerSupply_701CClass *init(const char *);
-		static PowerSupply_701CClass *instance();
-		~PowerSupply_701CClass();
-		Tango::DbDatum	get_class_property(string &);
-		Tango::DbDatum	get_default_device_property(string &);
-		Tango::DbDatum	get_default_class_property(string &);
-	
-	protected:
-		PowerSupply_701CClass(string &);
-		static PowerSupply_701CClass *_instance;
-		void command_factory();
-		void attribute_factory(vector<Tango::Attr *> &);
-		void pipe_factory();
-		void write_class_property();
-		void set_default_property();
-		void get_class_property();
-		string get_cvstag();
-		string get_cvsroot();
-	
-	private:
-		void device_factory(const Tango::DevVarStringArray *);
-		void create_static_attribute_list(vector<Tango::Attr *> &);
-		void erase_dynamic_attributes(const Tango::DevVarStringArray *,vector<Tango::Attr *> &);
-		vector<string>	defaultAttList;
-		Tango::Attr *get_attr_object_by_name(vector<Tango::Attr *> &att_list, string attname);
+    public:
+        //    write class properties data members
+        Tango::DbData    cl_prop;
+        Tango::DbData    cl_def_prop;
+        Tango::DbData    dev_def_prop;
+    
+        //    Method prototypes
+        static PowerSupply_701CClass *init(const char *);
+        static PowerSupply_701CClass *instance();
+        ~PowerSupply_701CClass();
+        Tango::DbDatum    get_class_property(string &);
+        Tango::DbDatum    get_default_device_property(string &);
+        Tango::DbDatum    get_default_class_property(string &);
+    
+    protected:
+        PowerSupply_701CClass(string &);
+        static PowerSupply_701CClass *_instance;
+        void command_factory();
+        void attribute_factory(vector<Tango::Attr *> &);
+        void pipe_factory();
+        void write_class_property();
+        void set_default_property();
+        void get_class_property();
+        string get_cvstag();
+        string get_cvsroot();
+    
+    private:
+        void device_factory(const Tango::DevVarStringArray *);
+        void create_static_attribute_list(vector<Tango::Attr *> &);
+        void erase_dynamic_attributes(const Tango::DevVarStringArray *,vector<Tango::Attr *> &);
+        vector<string>    defaultAttList;
+        Tango::Attr *get_attr_object_by_name(vector<Tango::Attr *> &att_list, string attname);
 };
 
-}	//	End of namespace
+}    //    End of namespace
 
-#endif   //	PowerSupply_701C_H
+#endif   //    PowerSupply_701C_H

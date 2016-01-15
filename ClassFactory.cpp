@@ -41,16 +41,16 @@ static const char *RcsId = "$Id:  $";
 #include <tango.h>
 #include <PowerSupply_701CClass.h>
 
-//	Add class header files if needed
+//    Add class header files if needed
 
 
 /**
- *	Create PowerSupply_701C Class singleton and store it in DServer object.
+ *    Create PowerSupply_701C Class singleton and store it in DServer object.
  */
 
 void Tango::DServer::class_factory()
 {
-	//	Add method class init if needed
-	add_class(PowerSupply_701C_ns::PowerSupply_701CClass::init("PowerSupply_701C"));
+    //    Add method class init if needed
+    add_class(PowerSupply_701C_ns::PowerSupply_701CClass::init("PowerSupply_701C"));
 }
-/*----- PROTECTED REGION END -----*/	//	PowerSupply_701C::ClassFactory.cpp
+/*----- PROTECTED REGION END -----*/    //    PowerSupply_701C::ClassFactory.cpp
