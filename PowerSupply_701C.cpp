@@ -882,6 +882,7 @@ void PowerSupply_701C::checkSocketState()
 void PowerSupply_701C::checkErrorByte(char byte)
 {
     // ??? check errorbyte
+    DEBUG_STREAM << "ERRORBYTE: " <<(short int)byte << endl;
     if ((1) & byte)
     {
         set_state(Tango::FAULT);
@@ -920,6 +921,7 @@ void PowerSupply_701C::checkErrorByte(char byte)
 
 void PowerSupply_701C::checkStateByte(char byte)
 {
+    DEBUG_STREAM << "STATEBYTE: " <<(short int)byte << endl;
     //isExternalControl = (1) & byte;
     attr_isExternalControl_read[0] = (1) & byte;
     isActive = (1 << 1) & byte;
@@ -935,6 +937,7 @@ void PowerSupply_701C::checkStateByte(char byte)
     if(isVoltageFromOutComp)
         DEBUG_STREAM << "ISVOLT";
     DEBUG_STREAM <<endl;
+
 
     if (attr_isExternalControl_read[0]) {
         if (isActive) {
