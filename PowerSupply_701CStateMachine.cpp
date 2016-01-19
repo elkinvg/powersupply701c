@@ -91,6 +91,54 @@ bool PowerSupply_701C::is_isExternalControl_allowed(TANGO_UNUSED(Tango::AttReqTy
     return true;
 }
 
+//--------------------------------------------------------
+/**
+ *    Method      : PowerSupply_701C::is_isActive_allowed()
+ *    Description : Execution allowed for isActive attribute
+ */
+//--------------------------------------------------------
+bool PowerSupply_701C::is_isActive_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+
+    //    Not any excluded states for isActive attribute in read access.
+    /*----- PROTECTED REGION ID(PowerSupply_701C::isActiveStateAllowed_READ) ENABLED START -----*/
+    
+    /*----- PROTECTED REGION END -----*/    //    PowerSupply_701C::isActiveStateAllowed_READ
+    return true;
+}
+
+//--------------------------------------------------------
+/**
+ *    Method      : PowerSupply_701C::is_isVoltageFromOutComp_allowed()
+ *    Description : Execution allowed for isVoltageFromOutComp attribute
+ */
+//--------------------------------------------------------
+bool PowerSupply_701C::is_isVoltageFromOutComp_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+
+    //    Not any excluded states for isVoltageFromOutComp attribute in read access.
+    /*----- PROTECTED REGION ID(PowerSupply_701C::isVoltageFromOutCompStateAllowed_READ) ENABLED START -----*/
+    
+    /*----- PROTECTED REGION END -----*/    //    PowerSupply_701C::isVoltageFromOutCompStateAllowed_READ
+    return true;
+}
+
+//--------------------------------------------------------
+/**
+ *    Method      : PowerSupply_701C::is_isVoltageMatchesToGiven_allowed()
+ *    Description : Execution allowed for isVoltageMatchesToGiven attribute
+ */
+//--------------------------------------------------------
+bool PowerSupply_701C::is_isVoltageMatchesToGiven_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+
+    //    Not any excluded states for isVoltageMatchesToGiven attribute in read access.
+    /*----- PROTECTED REGION ID(PowerSupply_701C::isVoltageMatchesToGivenStateAllowed_READ) ENABLED START -----*/
+    
+    /*----- PROTECTED REGION END -----*/    //    PowerSupply_701C::isVoltageMatchesToGivenStateAllowed_READ
+    return true;
+}
+
 
 //=================================================
 //        Commands Allowed Methods

@@ -136,6 +136,9 @@ public:
 public:
     Tango::DevUShort    *attr_Voltage_read;
     Tango::DevBoolean    *attr_isExternalControl_read;
+    Tango::DevBoolean    *attr_isActive_read;
+    Tango::DevBoolean    *attr_isVoltageFromOutComp_read;
+    Tango::DevBoolean    *attr_isVoltageMatchesToGiven_read;
 
 //    Constructors and destructors
 public:
@@ -210,7 +213,7 @@ public:
 
 /**
  *    Attribute Voltage related methods
- *    Description:
+ *    Description: 
  *
  *    Data type:    Tango::DevUShort
  *    Attr type:    Scalar
@@ -220,13 +223,40 @@ public:
     virtual bool is_Voltage_allowed(Tango::AttReqType type);
 /**
  *    Attribute isExternalControl related methods
- *    Description:
+ *    Description: 
  *
  *    Data type:    Tango::DevBoolean
  *    Attr type:    Scalar
  */
     virtual void read_isExternalControl(Tango::Attribute &attr);
     virtual bool is_isExternalControl_allowed(Tango::AttReqType type);
+/**
+ *    Attribute isActive related methods
+ *    Description: 
+ *
+ *    Data type:    Tango::DevBoolean
+ *    Attr type:    Scalar
+ */
+    virtual void read_isActive(Tango::Attribute &attr);
+    virtual bool is_isActive_allowed(Tango::AttReqType type);
+/**
+ *    Attribute isVoltageFromOutComp related methods
+ *    Description: 
+ *
+ *    Data type:    Tango::DevBoolean
+ *    Attr type:    Scalar
+ */
+    virtual void read_isVoltageFromOutComp(Tango::Attribute &attr);
+    virtual bool is_isVoltageFromOutComp_allowed(Tango::AttReqType type);
+/**
+ *    Attribute isVoltageMatchesToGiven related methods
+ *    Description: 
+ *
+ *    Data type:    Tango::DevBoolean
+ *    Attr type:    Scalar
+ */
+    virtual void read_isVoltageMatchesToGiven(Tango::Attribute &attr);
+    virtual bool is_isVoltageMatchesToGiven_allowed(Tango::AttReqType type);
 
 
     //--------------------------------------------------------

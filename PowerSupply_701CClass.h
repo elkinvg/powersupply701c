@@ -87,6 +87,45 @@ public:
         {return (static_cast<PowerSupply_701C *>(dev))->is_isExternalControl_allowed(ty);}
 };
 
+//    Attribute isActive class definition
+class isActiveAttrib: public Tango::Attr
+{
+public:
+    isActiveAttrib():Attr("isActive",
+            Tango::DEV_BOOLEAN, Tango::READ) {};
+    ~isActiveAttrib() {};
+    virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+        {(static_cast<PowerSupply_701C *>(dev))->read_isActive(att);}
+    virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+        {return (static_cast<PowerSupply_701C *>(dev))->is_isActive_allowed(ty);}
+};
+
+//    Attribute isVoltageFromOutComp class definition
+class isVoltageFromOutCompAttrib: public Tango::Attr
+{
+public:
+    isVoltageFromOutCompAttrib():Attr("isVoltageFromOutComp",
+            Tango::DEV_BOOLEAN, Tango::READ) {};
+    ~isVoltageFromOutCompAttrib() {};
+    virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+        {(static_cast<PowerSupply_701C *>(dev))->read_isVoltageFromOutComp(att);}
+    virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+        {return (static_cast<PowerSupply_701C *>(dev))->is_isVoltageFromOutComp_allowed(ty);}
+};
+
+//    Attribute isVoltageMatchesToGiven class definition
+class isVoltageMatchesToGivenAttrib: public Tango::Attr
+{
+public:
+    isVoltageMatchesToGivenAttrib():Attr("isVoltageMatchesToGiven",
+            Tango::DEV_BOOLEAN, Tango::READ) {};
+    ~isVoltageMatchesToGivenAttrib() {};
+    virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+        {(static_cast<PowerSupply_701C *>(dev))->read_isVoltageMatchesToGiven(att);}
+    virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+        {return (static_cast<PowerSupply_701C *>(dev))->is_isVoltageMatchesToGiven_allowed(ty);}
+};
+
 
 //=========================================
 //    Define classes for commands

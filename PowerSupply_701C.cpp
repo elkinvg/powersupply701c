@@ -67,8 +67,11 @@ static const char *RcsId = "$Id:  $";
 //================================================================
 //  Attributes managed are:
 //================================================================
-//  Voltage            |  Tango::DevUShort    Scalar
-//  isExternalControl  |  Tango::DevBoolean    Scalar
+//  Voltage                  |  Tango::DevUShort    Scalar
+//  isExternalControl        |  Tango::DevBoolean    Scalar
+//  isActive                 |  Tango::DevBoolean    Scalar
+//  isVoltageFromOutComp     |  Tango::DevBoolean    Scalar
+//  isVoltageMatchesToGiven  |  Tango::DevBoolean    Scalar
 //================================================================
 
 namespace PowerSupply_701C_ns
@@ -131,6 +134,9 @@ void PowerSupply_701C::delete_device()
     /*----- PROTECTED REGION END -----*/    //    PowerSupply_701C::delete_device
     delete[] attr_Voltage_read;
     delete[] attr_isExternalControl_read;
+    delete[] attr_isActive_read;
+    delete[] attr_isVoltageFromOutComp_read;
+    delete[] attr_isVoltageMatchesToGiven_read;
 }
 
 //--------------------------------------------------------
@@ -154,6 +160,9 @@ void PowerSupply_701C::init_device()
 
     attr_Voltage_read = new Tango::DevUShort[1];
     attr_isExternalControl_read = new Tango::DevBoolean[1];
+    attr_isActive_read = new Tango::DevBoolean[1];
+    attr_isVoltageFromOutComp_read = new Tango::DevBoolean[1];
+    attr_isVoltageMatchesToGiven_read = new Tango::DevBoolean[1];
     //    No longer if mandatory property not set.
     if (mandatoryNotDefined)
         return;
@@ -290,7 +299,7 @@ void PowerSupply_701C::check_mandatory_property(Tango::DbDatum &class_prop, Tang
 //--------------------------------------------------------
 void PowerSupply_701C::always_executed_hook()
 {
-//    DEBUG_STREAM << "PowerSupply_701C::always_executed_hook()  " << device_name << endl;
+    //DEBUG_STREAM << "PowerSupply_701C::always_executed_hook()  " << device_name << endl;
     if (mandatoryNotDefined)
     {
         string    status(get_status());
@@ -467,6 +476,60 @@ void PowerSupply_701C::read_isExternalControl(Tango::Attribute &attr)
     attr.set_value(attr_isExternalControl_read);
 
     /*----- PROTECTED REGION END -----*/    //    PowerSupply_701C::read_isExternalControl
+}
+//--------------------------------------------------------
+/**
+ *    Read attribute isActive related method
+ *    Description:
+ *
+ *    Data type:    Tango::DevBoolean
+ *    Attr type:    Scalar
+ */
+//--------------------------------------------------------
+void PowerSupply_701C::read_isActive(Tango::Attribute &attr)
+{
+//    DEBUG_STREAM << "PowerSupply_701C::read_isActive(Tango::Attribute &attr) entering... " << endl;
+    /*----- PROTECTED REGION ID(PowerSupply_701C::read_isActive) ENABLED START -----*/
+    //    Set the attribute value
+    attr.set_value(attr_isActive_read);
+
+    /*----- PROTECTED REGION END -----*/    //    PowerSupply_701C::read_isActive
+}
+//--------------------------------------------------------
+/**
+ *    Read attribute isVoltageFromOutComp related method
+ *    Description:
+ *
+ *    Data type:    Tango::DevBoolean
+ *    Attr type:    Scalar
+ */
+//--------------------------------------------------------
+void PowerSupply_701C::read_isVoltageFromOutComp(Tango::Attribute &attr)
+{
+//    DEBUG_STREAM << "PowerSupply_701C::read_isVoltageFromOutComp(Tango::Attribute &attr) entering... " << endl;
+    /*----- PROTECTED REGION ID(PowerSupply_701C::read_isVoltageFromOutComp) ENABLED START -----*/
+    //    Set the attribute value
+    attr.set_value(attr_isVoltageFromOutComp_read);
+
+    /*----- PROTECTED REGION END -----*/    //    PowerSupply_701C::read_isVoltageFromOutComp
+}
+//--------------------------------------------------------
+/**
+ *    Read attribute isVoltageMatchesToGiven related method
+ *    Description:
+ *
+ *    Data type:    Tango::DevBoolean
+ *    Attr type:    Scalar
+ */
+//--------------------------------------------------------
+void PowerSupply_701C::read_isVoltageMatchesToGiven(Tango::Attribute &attr)
+{
+//    DEBUG_STREAM << "PowerSupply_701C::read_isVoltageMatchesToGiven(Tango::Attribute &attr) entering... " << endl;
+    /*----- PROTECTED REGION ID(PowerSupply_701C::read_isVoltageMatchesToGiven) ENABLED START -----*/
+    //    Set the attribute value
+    attr.set_value(attr_isVoltageMatchesToGiven_read);
+
+    /*----- PROTECTED REGION END -----*/    //    PowerSupply_701C::read_isVoltageMatchesToGiven
 }
 
 //--------------------------------------------------------

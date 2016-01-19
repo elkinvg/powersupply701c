@@ -383,7 +383,7 @@ void PowerSupply_701CClass::write_class_property()
                 header = "$HeadURL: ";
                 start = header.length();
                 string    strloc = src_path.substr(start, (end-start));
-
+                
                 Tango::DbDatum    svn_loc("svn_location");
                 svn_loc << strloc;
                 data.push_back(svn_loc);
@@ -392,13 +392,13 @@ void PowerSupply_701CClass::write_class_property()
     }
 
     //    Get CVS or SVN revision tag
-
+    
     // CVS tag
     string    tagname(TagName);
     header = "$Name: ";
     start = header.length();
     string    endstr(" $");
-
+    
     end   = tagname.find(endstr);
     if (end!=string::npos && end>start)
     {
@@ -407,17 +407,17 @@ void PowerSupply_701CClass::write_class_property()
         cvs_tag << strtag;
         data.push_back(cvs_tag);
     }
-
+    
     // SVN tag
     string    svnpath(SvnPath);
     header = "$HeadURL: ";
     start = header.length();
-
+    
     end   = svnpath.find(endstr);
     if (end!=string::npos && end>start)
     {
         string    strloc = svnpath.substr(start, end-start);
-
+        
         string tagstr ("/tags/");
         start = strloc.find(tagstr);
         if ( start!=string::npos )
@@ -425,7 +425,7 @@ void PowerSupply_701CClass::write_class_property()
             start = start + tagstr.length();
             end   = strloc.find(filename);
             string    strtag = strloc.substr(start, end-start-1);
-
+            
             Tango::DbDatum    svn_tag("svn_tag");
             svn_tag << strtag;
             data.push_back(svn_tag);
@@ -532,7 +532,7 @@ void PowerSupply_701CClass::attribute_factory(vector<Tango::Attr *> &att_list)
     //    min_warning    not set for Voltage
     //    delta_t    not set for Voltage
     //    delta_val    not set for Voltage
-
+    
     voltage->set_default_properties(voltage_prop);
     //    Not Polled
     voltage->set_disp_level(Tango::OPERATOR);
@@ -556,12 +556,84 @@ void PowerSupply_701CClass::attribute_factory(vector<Tango::Attr *> &att_list)
     //    min_warning    not set for isExternalControl
     //    delta_t    not set for isExternalControl
     //    delta_val    not set for isExternalControl
-
+    
     isexternalcontrol->set_default_properties(isexternalcontrol_prop);
     //    Not Polled
     isexternalcontrol->set_disp_level(Tango::OPERATOR);
     //    Not Memorized
     att_list.push_back(isexternalcontrol);
+
+    //    Attribute : isActive
+    isActiveAttrib    *isactive = new isActiveAttrib();
+    Tango::UserDefaultAttrProp    isactive_prop;
+    //    description    not set for isActive
+    //    label    not set for isActive
+    //    unit    not set for isActive
+    //    standard_unit    not set for isActive
+    //    display_unit    not set for isActive
+    //    format    not set for isActive
+    //    max_value    not set for isActive
+    //    min_value    not set for isActive
+    //    max_alarm    not set for isActive
+    //    min_alarm    not set for isActive
+    //    max_warning    not set for isActive
+    //    min_warning    not set for isActive
+    //    delta_t    not set for isActive
+    //    delta_val    not set for isActive
+    
+    isactive->set_default_properties(isactive_prop);
+    //    Not Polled
+    isactive->set_disp_level(Tango::OPERATOR);
+    //    Not Memorized
+    att_list.push_back(isactive);
+
+    //    Attribute : isVoltageFromOutComp
+    isVoltageFromOutCompAttrib    *isvoltagefromoutcomp = new isVoltageFromOutCompAttrib();
+    Tango::UserDefaultAttrProp    isvoltagefromoutcomp_prop;
+    //    description    not set for isVoltageFromOutComp
+    //    label    not set for isVoltageFromOutComp
+    //    unit    not set for isVoltageFromOutComp
+    //    standard_unit    not set for isVoltageFromOutComp
+    //    display_unit    not set for isVoltageFromOutComp
+    //    format    not set for isVoltageFromOutComp
+    //    max_value    not set for isVoltageFromOutComp
+    //    min_value    not set for isVoltageFromOutComp
+    //    max_alarm    not set for isVoltageFromOutComp
+    //    min_alarm    not set for isVoltageFromOutComp
+    //    max_warning    not set for isVoltageFromOutComp
+    //    min_warning    not set for isVoltageFromOutComp
+    //    delta_t    not set for isVoltageFromOutComp
+    //    delta_val    not set for isVoltageFromOutComp
+    
+    isvoltagefromoutcomp->set_default_properties(isvoltagefromoutcomp_prop);
+    //    Not Polled
+    isvoltagefromoutcomp->set_disp_level(Tango::OPERATOR);
+    //    Not Memorized
+    att_list.push_back(isvoltagefromoutcomp);
+
+    //    Attribute : isVoltageMatchesToGiven
+    isVoltageMatchesToGivenAttrib    *isvoltagematchestogiven = new isVoltageMatchesToGivenAttrib();
+    Tango::UserDefaultAttrProp    isvoltagematchestogiven_prop;
+    //    description    not set for isVoltageMatchesToGiven
+    //    label    not set for isVoltageMatchesToGiven
+    //    unit    not set for isVoltageMatchesToGiven
+    //    standard_unit    not set for isVoltageMatchesToGiven
+    //    display_unit    not set for isVoltageMatchesToGiven
+    //    format    not set for isVoltageMatchesToGiven
+    //    max_value    not set for isVoltageMatchesToGiven
+    //    min_value    not set for isVoltageMatchesToGiven
+    //    max_alarm    not set for isVoltageMatchesToGiven
+    //    min_alarm    not set for isVoltageMatchesToGiven
+    //    max_warning    not set for isVoltageMatchesToGiven
+    //    min_warning    not set for isVoltageMatchesToGiven
+    //    delta_t    not set for isVoltageMatchesToGiven
+    //    delta_val    not set for isVoltageMatchesToGiven
+    
+    isvoltagematchestogiven->set_default_properties(isvoltagematchestogiven_prop);
+    //    Not Polled
+    isvoltagematchestogiven->set_disp_level(Tango::OPERATOR);
+    //    Not Memorized
+    att_list.push_back(isvoltagematchestogiven);
 
 
     //    Create a list of static attributes
