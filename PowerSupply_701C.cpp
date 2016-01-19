@@ -186,6 +186,7 @@ void PowerSupply_701C::init_device()
     set_state(Tango::OFF);
     set_status("Device is OFF");
     attr_Voltage_read[0] = 0;
+	sleepTime = 300;
 
     try {
 
@@ -443,7 +444,11 @@ void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
             attr_Voltage_write = w_val;
             INFO_STREAM << " It sets new voltage: " << w_val << "V" << endl;
         } // ??? if reply!=OK
-
+#ifdef __unix__
+		usleep(sleepTime);
+#else
+		Sleep(sleepTime); // for serialport
+#endif
     } // from setvoltage
     else {
         //if (!isActive) charging_on(); // ???
@@ -691,9 +696,9 @@ Tango::DevUShort PowerSupply_701C::check_adc_output()
         return 65535;
     }
 #ifdef __unix__
-    usleep(300);
+    usleep(sleepTime);
 #else
-    Sleep(300); // for serialport
+    Sleep(sleepTime); // for serialport
 #endif
 
     /*----- PROTECTED REGION END -----*/    //    PowerSupply_701C::check_adc_output
@@ -771,9 +776,9 @@ void PowerSupply_701C::check_psstate()
         }
 
 #ifdef __unix__
-        usleep(300);
+        usleep(sleepTime);
 #else
-        Sleep(300); // for serialport
+        Sleep(sleepTime); // for serialport
 #endif
 
     }
@@ -1074,6 +1079,11 @@ void PowerSupply_701C::chargingOnOrOff(string command)
                     set_status("Incorrect reply of Device");
                 }
             }
+#ifdef __unix__
+			usleep(sleepTime);
+#else
+			Sleep(sleepTime); // for serialport
+#endif
         }
     } catch (Tango::DevFailed &e) {
         Tango::Except::print_exception(e);

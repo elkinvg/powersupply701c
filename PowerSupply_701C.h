@@ -88,6 +88,8 @@ private:
 
     // state Socket
     bool isSocketOn;
+	
+	unsigned short sleepTime; // in millisecond
 
     // errors bytes
 //    enum class ErrorByte {Overtheat,VoltageBelowNorm,ShortCircuit,BreakLoad};
