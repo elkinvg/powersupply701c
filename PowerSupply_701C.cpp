@@ -176,9 +176,12 @@ void PowerSupply_701C::init_device()
     //elkin
     //isExternalControl = false;
     attr_isExternalControl_read[0] = false;
-    isActive = false;
-    isVoltageFromOutComp = false;
-    isVoltageMatchesToGiven = false;
+	attr_isActive_read[0] = false;
+    //isActive = false;
+	attr_isVoltageFromOutComp_read[0] = false;
+	//isVoltageFromOutComp = false;
+    //isVoltageMatchesToGiven = false;
+	attr_isVoltageMatchesToGiven_read[0] = false;
 
     set_state(Tango::OFF);
     set_status("Device is OFF");
@@ -405,7 +408,7 @@ void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
     // if isActive || isExternalControl || isVoltageFromOutComp is false ???
     //if (isActive && isExternalControl && isVoltageFromOutComp)
     DEBUG_STREAM << "WRITE VOLTAGE isExternalControl:" << attr_isExternalControl_read[0] << endl;
-    DEBUG_STREAM << "WRITE VOLTAGE isVoltageFromOutComp:" << isVoltageFromOutComp << endl;
+    DEBUG_STREAM << "WRITE VOLTAGE isVoltageFromOutComp:" << attr_isVoltageFromOutComp_read[0] << endl;
     //if (isExternalControl && isVoltageFromOutComp)
     if (attr_isExternalControl_read[0])
     {
@@ -450,7 +453,7 @@ void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
             set_status("isExternalControl is FALSE");
             return; // ??? throw? FAULT or OFF
         }
-        if (!isVoltageFromOutComp)
+        if (!attr_isVoltageFromOutComp_read[0])
         {
             set_state(Tango::DISABLE);
             set_status("isVoltageFromOutComp is FALSE");
@@ -987,26 +990,26 @@ void PowerSupply_701C::checkStateByte(char byte)
     DEBUG_STREAM << "STATEBYTE: " <<(short int)byte << endl;
     //isExternalControl = (1) & byte;
     attr_isExternalControl_read[0] = (1) & byte;
-    isActive = (1 << 1) & byte;
-    isVoltageMatchesToGiven =  (1 << 3) & byte;
-    isVoltageFromOutComp = (1 << 6) & byte;
+    attr_isActive_read[0] = (1 << 1) & byte;
+    attr_isVoltageMatchesToGiven_read[0] =  (1 << 3) & byte;
+    attr_isVoltageFromOutComp_read[0] = (1 << 6) & byte;
 
     if(attr_isExternalControl_read[0])
         DEBUG_STREAM << "ISEXTERNAL";
-    if(isActive)
+    if(attr_isActive_read[0])
         DEBUG_STREAM << "ISACTIVE";
-    if(isVoltageMatchesToGiven)
+    if(attr_isVoltageMatchesToGiven_read[0])
         DEBUG_STREAM << "ISMATCH";
-    if(isVoltageFromOutComp)
+    if(attr_isVoltageFromOutComp_read[0])
         DEBUG_STREAM << "ISVOLT";
     DEBUG_STREAM <<endl;
 
 
     if (attr_isExternalControl_read[0]) {
-        if (isActive) {
-            if (isVoltageMatchesToGiven) { // ??? должен выключить режим зарядки
+        if (attr_isActive_read[0]) {
+            if (attr_isVoltageMatchesToGiven_read[0]) { // ??? должен выключить режим зарядки
                 chargingOnOrOff(CHARGINGOFFCOMM);  // timeout??? for device
-                if (!isActive) {
+                if (!attr_isActive_read[0]) {
                     set_state(Tango::ON);
                     set_status("Device is ON. Voltage matches to given");
                     INFO_STREAM << " Capacitor is charged on " << device_name << endl;
@@ -1052,13 +1055,13 @@ void PowerSupply_701C::chargingOnOrOff(string command)
                     INFO_STREAM << " Charging OFF " << device_name << endl;
                     set_state(Tango::ON);
                     set_status("Device is ON");
-                    isActive = false;
+                    attr_isActive_read[0] = false;
                 }
                 if (command==CHARGINGONCOMM) {
                     INFO_STREAM << " Charging ON " << device_name << endl;
                     set_state(Tango::RUNNING);
                     set_status("Charging capacitor");
-                    isActive = true;
+                    attr_isActive_read[0] = true;
                 }
 
             }
