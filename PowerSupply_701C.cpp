@@ -395,7 +395,7 @@ void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
 
     // if isActive || isExternalControl || isVoltageFromOutComp is false ???
     //if (isActive && isExternalControl && isVoltageFromOutComp)
-    DEBUG_STREAM << "WRITE VOLTAGE isExternalControl:" << attr_isExternalControl_read << endl;
+    DEBUG_STREAM << "WRITE VOLTAGE isExternalControl:" << attr_isExternalControl_read[0] << endl;
     DEBUG_STREAM << "WRITE VOLTAGE isVoltageFromOutComp:" << isVoltageFromOutComp << endl;
     //if (isExternalControl && isVoltageFromOutComp)
     if (attr_isExternalControl_read[0])
