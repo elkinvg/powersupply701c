@@ -175,7 +175,7 @@ void PowerSupply_701C::init_device()
 #endif
     //elkin
     //isExternalControl = false;
-    attr_isExternalControl_read[0] = false;
+    attr_isExternalControl_read[0] = false; // true если включение заряда через спец.разъём
 	attr_isActive_read[0] = false;
     //isActive = false;
 	attr_isVoltageFromOutComp_read[0] = false;
@@ -572,9 +572,8 @@ void PowerSupply_701C::charging_on()
     //checkSocketState();
     //if (!isSocketOn)  return; // ??? throw write_attr_hardware
 
-    if(!ifStateIsOnOrMoving()) check_psstate();
-
-    // timeout??? for device
+    //if(!ifStateIsOnOrMoving()) check_psstate();
+	check_psstate();
 
     chargingOnOrOff(CHARGINGONCOMM);
 
@@ -596,9 +595,8 @@ void PowerSupply_701C::charging_off()
     //checkSocketState();
     //if (!isSocketOn)  return;
 
-    if(!ifStateIsOnOrMoving()) check_psstate();
-
-    // timeout??? for device
+    //if(!ifStateIsOnOrMoving()) check_psstate();
+	check_psstate();
 
     chargingOnOrOff(CHARGINGOFFCOMM);
 
@@ -1014,7 +1012,7 @@ void PowerSupply_701C::checkStateByte(char byte)
     DEBUG_STREAM <<endl;
 #endif
 
-//    if (attr_isExternalControl_read[0]) {
+    if (!attr_isExternalControl_read[0]) {
         if (attr_isActive_read[0]) {
             if (attr_isVoltageMatchesToGiven_read[0]) { // ??? должен выключить режим зарядки
                 chargingOnOrOff(CHARGINGOFFCOMM);  // timeout??? for device
@@ -1033,13 +1031,13 @@ void PowerSupply_701C::checkStateByte(char byte)
             set_state(Tango::ON);
             set_status("Device is ON");
         }
-//    }
-//    else
-//    {
-//        set_state(Tango::DISABLE);
-//        set_status("ExternalControl is inactive");
-//        return; // ??? throw? FAULT or OFF
-//    }
+    }
+    else
+    {
+        set_state(Tango::DISABLE);
+        set_status("ExternalControl is active");
+        return; // ??? throw? FAULT or OFF
+    }
 }
 
 bool PowerSupply_701C::ifStateIsOnOrMoving()
@@ -1055,8 +1053,8 @@ void PowerSupply_701C::chargingOnOrOff(string command)
 {
     try { // if isActive || isExternalControl is false ???
         //if (isActive && isExternalControl)
-//        if (attr_isExternalControl_read[0])
-//        {
+        if (!attr_isExternalControl_read[0]) // attr_isExternalControl_read true если включение заряда через спец.разъём
+        {
             string reply;
             reply = tangoSocket->toSocketWriteAndReadBinary(command);
             if (reply==OK) {
@@ -1088,7 +1086,7 @@ void PowerSupply_701C::chargingOnOrOff(string command)
 #else
 			Sleep(sleepTime); // for serialport
 #endif
-//        }
+        }
     } catch (Tango::DevFailed &e) {
         Tango::Except::print_exception(e);
         set_state(Tango::FAULT);
