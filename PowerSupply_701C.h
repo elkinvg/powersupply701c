@@ -51,6 +51,8 @@
 #endif
 #endif
 
+#define TESTING
+
 /*----- PROTECTED REGION END -----*/    //    PowerSupply_701C.h
 
 /**

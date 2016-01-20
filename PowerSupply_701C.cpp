@@ -418,14 +418,14 @@ void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
         //convert little-endian to big-endian
         Tango::DevUShort writeVal = w_val;
         char* instVolt = reinterpret_cast<char*>(&writeVal);
-        char tmp; tmp = instVolt[0];instVolt[0]= instVolt[1];instVolt[1]=tmp;
+        //char tmp; tmp = instVolt[0];instVolt[0]= instVolt[1];instVolt[1]=tmp;
 
         commandToPS = '#';
         commandToPS.push_back(4);
         commandToPS += 'U';
         //commandToPS += writeVal; // big-endian ???
-        commandToPS.push_back(instVolt[0]);
         commandToPS.push_back(instVolt[1]);
+        commandToPS.push_back(instVolt[0]);
 
         checkSumChr = calcCheckSum(commandToPS);
         commandToPS += checkSumChr;
@@ -458,12 +458,12 @@ void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
             set_status("isExternalControl is FALSE");
             return; // ??? throw? FAULT or OFF
         }
-        if (!attr_isVoltageFromOutComp_read[0])
-        {
-            set_state(Tango::DISABLE);
-            set_status("isVoltageFromOutComp is FALSE");
-            return; // ??? throw? FAULT or OFF
-        }
+//        if (!attr_isVoltageFromOutComp_read[0])
+//        {
+//            set_state(Tango::DISABLE);
+//            set_status("isVoltageFromOutComp is FALSE");
+//            return; // ??? throw? FAULT or OFF
+//        }
     }
     /*----- PROTECTED REGION END -----*/    //    PowerSupply_701C::write_Voltage
 }
@@ -734,7 +734,10 @@ void PowerSupply_701C::check_psstate()
 
         DEBUG_STREAM << "checkPSState_Reply:" << reply << endl;
         char errorbyte,statebyte;
+
+#ifdef TESTING
         DEBUG_STREAM << "Request size: " << reply.size() << endl;
+#endif
 
         //string stateStr = {reply[0],reply[1]};
         string stateStr;
@@ -999,6 +1002,7 @@ void PowerSupply_701C::checkStateByte(char byte)
     attr_isVoltageMatchesToGiven_read[0] =  (1 << 3) & byte;
     attr_isVoltageFromOutComp_read[0] = (1 << 6) & byte;
 
+#ifdef TESTING
     if(attr_isExternalControl_read[0])
         DEBUG_STREAM << "ISEXTERNAL";
     if(attr_isActive_read[0])
@@ -1008,7 +1012,7 @@ void PowerSupply_701C::checkStateByte(char byte)
     if(attr_isVoltageFromOutComp_read[0])
         DEBUG_STREAM << "ISVOLT";
     DEBUG_STREAM <<endl;
-
+#endif
 
     if (attr_isExternalControl_read[0]) {
         if (attr_isActive_read[0]) {
