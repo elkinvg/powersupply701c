@@ -411,8 +411,8 @@ void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
     DEBUG_STREAM << "WRITE VOLTAGE isExternalControl:" << attr_isExternalControl_read[0] << endl;
     DEBUG_STREAM << "WRITE VOLTAGE isVoltageFromOutComp:" << attr_isVoltageFromOutComp_read[0] << endl;
     //if (isExternalControl && isVoltageFromOutComp)
-    if (attr_isExternalControl_read[0])
-    {
+//    if (attr_isExternalControl_read[0])
+//    {
         string reply,commandToPS,checkSumChr;
 
         //convert little-endian to big-endian
@@ -449,22 +449,22 @@ void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
 #else
 		Sleep(sleepTime); // for serialport
 #endif
-    } // from setvoltage
-    else {
-        //if (!isActive) charging_on(); // ???
-        if (!attr_isExternalControl_read[0])
-        {
-            set_state(Tango::DISABLE);
-            set_status("isExternalControl is FALSE");
-            return; // ??? throw? FAULT or OFF
-        }
+//    } // from setvoltage
+//    else {
+//        //if (!isActive) charging_on(); // ???
+//        if (!attr_isExternalControl_read[0])
+//        {
+//            set_state(Tango::DISABLE);
+//            set_status("isExternalControl is FALSE");
+//            return; // ??? throw? FAULT or OFF
+//        }
 //        if (!attr_isVoltageFromOutComp_read[0])
 //        {
 //            set_state(Tango::DISABLE);
 //            set_status("isVoltageFromOutComp is FALSE");
 //            return; // ??? throw? FAULT or OFF
 //        }
-    }
+//    }
     /*----- PROTECTED REGION END -----*/    //    PowerSupply_701C::write_Voltage
 }
 //--------------------------------------------------------
@@ -1014,7 +1014,7 @@ void PowerSupply_701C::checkStateByte(char byte)
     DEBUG_STREAM <<endl;
 #endif
 
-    if (attr_isExternalControl_read[0]) {
+//    if (attr_isExternalControl_read[0]) {
         if (attr_isActive_read[0]) {
             if (attr_isVoltageMatchesToGiven_read[0]) { // ??? должен выключить режим зарядки
                 chargingOnOrOff(CHARGINGOFFCOMM);  // timeout??? for device
@@ -1033,13 +1033,13 @@ void PowerSupply_701C::checkStateByte(char byte)
             set_state(Tango::ON);
             set_status("Device is ON");
         }
-    }
-    else
-    {
-        set_state(Tango::DISABLE);
-        set_status("ExternalControl is inactive");
-        return; // ??? throw? FAULT or OFF
-    }
+//    }
+//    else
+//    {
+//        set_state(Tango::DISABLE);
+//        set_status("ExternalControl is inactive");
+//        return; // ??? throw? FAULT or OFF
+//    }
 }
 
 bool PowerSupply_701C::ifStateIsOnOrMoving()
@@ -1055,8 +1055,8 @@ void PowerSupply_701C::chargingOnOrOff(string command)
 {
     try { // if isActive || isExternalControl is false ???
         //if (isActive && isExternalControl)
-        if (attr_isExternalControl_read[0])
-        {
+//        if (attr_isExternalControl_read[0])
+//        {
             string reply;
             reply = tangoSocket->toSocketWriteAndReadBinary(command);
             if (reply==OK) {
@@ -1088,7 +1088,7 @@ void PowerSupply_701C::chargingOnOrOff(string command)
 #else
 			Sleep(sleepTime); // for serialport
 #endif
-        }
+//        }
     } catch (Tango::DevFailed &e) {
         Tango::Except::print_exception(e);
         set_state(Tango::FAULT);
