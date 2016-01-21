@@ -1015,17 +1015,24 @@ void PowerSupply_701C::checkStateByte(char byte)
     if (!attr_isExternalControl_read[0]) {
         if (attr_isActive_read[0]) {
             if (attr_isVoltageMatchesToGiven_read[0]) { // ??? должен выключить режим зарядки
-                chargingOnOrOff(CHARGINGOFFCOMM);  // timeout??? for device
-                if (!attr_isActive_read[0]) {
-                    set_state(Tango::ON);
-                    set_status("Device is ON. Voltage matches to given");
-                    INFO_STREAM << " Capacitor is charged on " << device_name << endl;
-                }
+                set_state(Tango::RUNNING);
+                set_status("Charging capacitor. Voltage matches to given");
             }
             else {
                 set_state(Tango::RUNNING);
                 set_status("Charging capacitor");
             }
+//                chargingOnOrOff(CHARGINGOFFCOMM);  // timeout??? for device
+//                if (!attr_isActive_read[0]) {
+//                    set_state(Tango::ON);
+//                    set_status("Device is ON. Voltage matches to given");
+//                    INFO_STREAM << " Capacitor is charged on " << device_name << endl;
+//                }
+//            }
+//            else {
+//                set_state(Tango::RUNNING);
+//                set_status("Charging capacitor");
+//            }
         }
         else {
             set_state(Tango::ON);
