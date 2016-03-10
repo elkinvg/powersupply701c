@@ -202,7 +202,8 @@ bool PowerSupply_701C::is_CheckPSState_allowed(TANGO_UNUSED(const CORBA::Any &an
 {
     //    Not any excluded states for CheckPSState command.
     /*----- PROTECTED REGION ID(PowerSupply_701C::CheckPSStateStateAllowed) ENABLED START -----*/
-
+    checkSocketState();
+    if (!isSocketOn)  return false;
     /*----- PROTECTED REGION END -----*/    //    PowerSupply_701C::CheckPSStateStateAllowed
     return true;
 }
