@@ -41,7 +41,7 @@
 #include <tango.h>
 #include "tangosocket.h"
 
-#if _MSC_VER > 1700
+#if _MSC_VER > 1800
 #define SUPC11
 #else
 #if __GNUC__ > 3

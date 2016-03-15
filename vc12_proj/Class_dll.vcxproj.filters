@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\PowerSupply_701C.cpp" />
+    <ClCompile Include="..\PowerSupply_701CClass.cpp" />
+    <ClCompile Include="..\PowerSupply_701CStateMachine.cpp" />
+    <ClCompile Include="..\sock\tangosocket.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\PowerSupply_701C.h">
+    </ClInclude>
+    <ClInclude Include="..\PowerSupply_701CClass.h">
+    </ClInclude>
+    <ClInclude Include="..\sock\tangosocket.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{26066fcf-2f85-4ed9-978a-766eb01b58f5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
