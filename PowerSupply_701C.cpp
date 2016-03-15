@@ -176,17 +176,17 @@ void PowerSupply_701C::init_device()
     //elkin
     //isExternalControl = false;
     attr_isExternalControl_read[0] = false; // true если включение заряда через спец.разъём
-	attr_isActive_read[0] = false;
+    attr_isActive_read[0] = false;
     //isActive = false;
-	attr_isVoltageFromOutComp_read[0] = false;
-	//isVoltageFromOutComp = false;
+    attr_isVoltageFromOutComp_read[0] = false;
+    //isVoltageFromOutComp = false;
     //isVoltageMatchesToGiven = false;
-	attr_isVoltageMatchesToGiven_read[0] = false;
+    attr_isVoltageMatchesToGiven_read[0] = false;
 
     set_state(Tango::OFF);
     set_status("Device is OFF");
     attr_Voltage_read[0] = 0;
-	sleepTime = 300;
+    sleepTime = 300;
 
     try {
 
@@ -303,7 +303,7 @@ void PowerSupply_701C::check_mandatory_property(Tango::DbDatum &class_prop, Tang
 //--------------------------------------------------------
 void PowerSupply_701C::always_executed_hook()
 {
-    //DEBUG_STREAM << "PowerSupply_701C::always_executed_hook()  " << device_name << endl;
+//    DEBUG_STREAM << "PowerSupply_701C::always_executed_hook()  " << device_name << endl;
     if (mandatoryNotDefined)
     {
         string    status(get_status());
@@ -327,7 +327,7 @@ void PowerSupply_701C::always_executed_hook()
 //--------------------------------------------------------
 void PowerSupply_701C::read_attr_hardware(TANGO_UNUSED(vector<long> &attr_list))
 {
-    //DEBUG_STREAM << "PowerSupply_701C::read_attr_hardware(vector<long> &attr_list) entering... " << endl;
+//    DEBUG_STREAM << "PowerSupply_701C::read_attr_hardware(vector<long> &attr_list) entering... " << endl;
     /*----- PROTECTED REGION ID(PowerSupply_701C::read_attr_hardware) ENABLED START -----*/
 
     //    Add your own code
@@ -342,7 +342,7 @@ void PowerSupply_701C::read_attr_hardware(TANGO_UNUSED(vector<long> &attr_list))
 //--------------------------------------------------------
 void PowerSupply_701C::write_attr_hardware(TANGO_UNUSED(vector<long> &attr_list))
 {
-    DEBUG_STREAM << "PowerSupply_701C::write_attr_hardware(vector<long> &attr_list) entering... " << endl;
+//    DEBUG_STREAM << "PowerSupply_701C::write_attr_hardware(vector<long> &attr_list) entering... " << endl;
     /*----- PROTECTED REGION ID(PowerSupply_701C::write_attr_hardware) ENABLED START -----*/
 
     //    Add your own code
@@ -393,7 +393,7 @@ void PowerSupply_701C::read_Voltage(Tango::Attribute &attr)
 //--------------------------------------------------------
 void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
 {
-    DEBUG_STREAM << "PowerSupply_701C::write_Voltage(Tango::WAttribute &attr) entering... " << endl;
+//    DEBUG_STREAM << "PowerSupply_701C::write_Voltage(Tango::WAttribute &attr) entering... " << endl;
     //    Retrieve write value
     Tango::DevUShort    w_val;
     attr.get_write_value(w_val);
@@ -445,9 +445,9 @@ void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
             INFO_STREAM << " It sets new voltage: " << w_val << "V" << endl;
         } // ??? if reply!=OK
 #ifdef __unix__
-		usleep(sleepTime);
+        usleep(sleepTime);
 #else
-		Sleep(sleepTime); // for serialport
+        Sleep(sleepTime); // for serialport
 #endif
 //    } // from setvoltage
 //    else {
@@ -558,6 +558,35 @@ void PowerSupply_701C::add_dynamic_attributes()
 
 //--------------------------------------------------------
 /**
+ *    Read pipe PipeAttr related method
+ *    Description:
+ */
+//--------------------------------------------------------
+void PowerSupply_701C::read_PipeAttr(Tango::Pipe &pipe)
+{
+    DEBUG_STREAM << "PowerSupply_701C::read_PipeAttr(Tango::Pipe &pipe) entering... " << endl;
+    /*----- PROTECTED REGION ID(PowerSupply_701C::read_PipeAttr) ENABLED START -----*/
+
+    //    Add your own code here
+    pipe.set_root_blob_name("psData");
+    vector<string> names{
+        "Voltage",
+        "isExternalControl",
+        "isActive",
+        "isVoltageFromOutComp",
+        "isVoltageMatchesToGiven",
+        "State",
+        "Status"
+    };
+    pipe.set_data_elt_names(names);
+
+    pipe << attr_Voltage_read[0] << attr_isExternalControl_read[0] <<
+            attr_isActive_read[0] << attr_isVoltageFromOutComp_read[0] << attr_isVoltageMatchesToGiven_read[0] << get_state() << get_status();
+
+    /*----- PROTECTED REGION END -----*/    //    PowerSupply_701C::read_PipeAttr
+}
+//--------------------------------------------------------
+/**
  *    Command ChargingOn related method
  *    Description: Switch on power supply
  *
@@ -573,7 +602,7 @@ void PowerSupply_701C::charging_on()
     //if (!isSocketOn)  return; // ??? throw write_attr_hardware
 
     //if(!ifStateIsOnOrMoving()) check_psstate();
-	check_psstate();
+    check_psstate();
 
     chargingOnOrOff(CHARGINGONCOMM);
 
@@ -596,7 +625,7 @@ void PowerSupply_701C::charging_off()
     //if (!isSocketOn)  return;
 
     //if(!ifStateIsOnOrMoving()) check_psstate();
-	check_psstate();
+    check_psstate();
 
     chargingOnOrOff(CHARGINGOFFCOMM);
 
@@ -1089,9 +1118,9 @@ void PowerSupply_701C::chargingOnOrOff(string command)
                 }
             }
 #ifdef __unix__
-			usleep(sleepTime);
+            usleep(sleepTime);
 #else
-			Sleep(sleepTime); // for serialport
+            Sleep(sleepTime); // for serialport
 #endif
         }
     } catch (Tango::DevFailed &e) {

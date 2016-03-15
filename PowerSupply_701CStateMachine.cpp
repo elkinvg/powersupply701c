@@ -139,6 +139,23 @@ bool PowerSupply_701C::is_isVoltageMatchesToGiven_allowed(TANGO_UNUSED(Tango::At
     return true;
 }
 
+//=================================================
+//        pipe Allowed Methods
+//=================================================
+//--------------------------------------------------------
+/**
+ *    Method      : PowerSupply_701C::is_PipeAttr_allowed()
+ *    Description : Execution allowed for PipeAttr pipe
+ */
+//--------------------------------------------------------
+bool PowerSupply_701C::is_PipeAttr_allowed(TANGO_UNUSED(Tango::PipeReqType type))
+{
+    //    Not any excluded states for PipeAttr pipe in read access.
+    /*----- PROTECTED REGION ID(PowerSupply_701C::PipeAttrStateAllowed_READ) ENABLED START -----*/
+
+    /*----- PROTECTED REGION END -----*/    //    PowerSupply_701C::PipeAttrStateAllowed_READ
+    return true;
+}
 
 //=================================================
 //        Commands Allowed Methods

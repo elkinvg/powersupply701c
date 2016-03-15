@@ -658,6 +658,13 @@ void PowerSupply_701CClass::pipe_factory()
     //    Add your own code
 
     /*----- PROTECTED REGION END -----*/    //    PowerSupply_701CClass::pipe_factory_before
+    Tango::UserDefaultPipeProp udpp;
+    PipeAttrClass    *pPipeAttr = new PipeAttrClass("PipeAttr",Tango::OPERATOR);
+    udpp.set_description("");
+    udpp.set_label("ps701Pipe");
+    pPipeAttr->set_default_properties(udpp);
+    pipe_list.push_back(pPipeAttr);
+
     /*----- PROTECTED REGION ID(PowerSupply_701CClass::pipe_factory_after) ENABLED START -----*/
 
     //    Add your own code

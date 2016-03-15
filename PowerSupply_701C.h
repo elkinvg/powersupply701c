@@ -90,8 +90,8 @@ private:
 
     // state Socket
     bool isSocketOn;
-	
-	unsigned short sleepTime; // in millisecond
+    
+    unsigned short sleepTime; // in millisecond
 
     // errors bytes
 //    enum class ErrorByte {Overtheat,VoltageBelowNorm,ShortCircuit,BreakLoad};
@@ -273,6 +273,11 @@ public:
 
 
 
+//    pipe related methods
+public:
+    //    Pipe PipeAttr
+    bool is_PipeAttr_allowed(Tango::PipeReqType);
+    void read_PipeAttr(Tango::Pipe &);
 
 //    Command related methods
 public:
