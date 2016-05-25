@@ -351,14 +351,6 @@ void PowerSupply_701C::write_attr_hardware(TANGO_UNUSED(vector<long> &attr_list)
     checkSocketState();
     if (!isSocketOn) return;
 
-//    if (!isSocketOn) {
-//        DEBUG_STREAM << "write_attr_hardware Socket error" << endl;
-//        //Tango::Except::throw_exception((const char *) "Socket error", "Couldn't connect to socket " + socket, "Bad socket reply");
-//        set_state(Tango::FAULT);
-//        set_status("Can't connect to socket " + socket);
-//        return;
-//    } // throw ???
-
     if(!ifStateIsOnOrMoving()) check_psstate();
 
     /*----- PROTECTED REGION END -----*/    //    PowerSupply_701C::write_attr_hardware
@@ -400,19 +392,14 @@ void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
     /*----- PROTECTED REGION ID(PowerSupply_701C::write_Voltage) ENABLED START -----*/
 
     // from setvoltage
-    //    checkSocketState();
     if (!isSocketOn) return;
-    //    checkPSState();
 
     // timeout??? for device
 
     // if isActive || isExternalControl || isVoltageFromOutComp is false ???
-    //if (isActive && isExternalControl && isVoltageFromOutComp)
     DEBUG_STREAM << "WRITE VOLTAGE isExternalControl:" << attr_isExternalControl_read[0] << endl;
     DEBUG_STREAM << "WRITE VOLTAGE isVoltageFromOutComp:" << attr_isVoltageFromOutComp_read[0] << endl;
-    //if (isExternalControl && isVoltageFromOutComp)
-//    if (attr_isExternalControl_read[0])
-//    {
+
         string reply,commandToPS,checkSumChr;
 
         //convert little-endian to big-endian
@@ -437,10 +424,6 @@ void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
         DEBUG_STREAM << "WRITE VOLTAGE reply:" << reply << endl;
 
         if (reply==OK) {
-//            voltage = w_val;
-//            *attr_Voltage_read = voltage;
-//            attr_Voltage_write = voltage;
-            /**attr_Voltage_read = w_val;*/ // ??? READ нужно здесь?
             attr_Voltage_write = w_val;
             INFO_STREAM << " It sets new voltage: " << w_val << "V" << endl;
         } // ??? if reply!=OK
@@ -449,22 +432,6 @@ void PowerSupply_701C::write_Voltage(Tango::WAttribute &attr)
 #else
         Sleep(sleepTime); // for serialport
 #endif
-//    } // from setvoltage
-//    else {
-//        //if (!isActive) charging_on(); // ???
-//        if (!attr_isExternalControl_read[0])
-//        {
-//            set_state(Tango::DISABLE);
-//            set_status("isExternalControl is FALSE");
-//            return; // ??? throw? FAULT or OFF
-//        }
-//        if (!attr_isVoltageFromOutComp_read[0])
-//        {
-//            set_state(Tango::DISABLE);
-//            set_status("isVoltageFromOutComp is FALSE");
-//            return; // ??? throw? FAULT or OFF
-//        }
-//    }
     /*----- PROTECTED REGION END -----*/    //    PowerSupply_701C::write_Voltage
 }
 //--------------------------------------------------------
@@ -596,12 +563,6 @@ void PowerSupply_701C::charging_on()
 {
     DEBUG_STREAM << "PowerSupply_701C::ChargingOn()  - " << device_name << endl;
     /*----- PROTECTED REGION ID(PowerSupply_701C::charging_on) ENABLED START -----*/
-
-    //    Add your own code
-    //checkSocketState();
-    //if (!isSocketOn)  return; // ??? throw write_attr_hardware
-
-    //if(!ifStateIsOnOrMoving()) check_psstate();
     check_psstate();
 
     chargingOnOrOff(CHARGINGONCOMM);
@@ -621,10 +582,6 @@ void PowerSupply_701C::charging_off()
     /*----- PROTECTED REGION ID(PowerSupply_701C::charging_off) ENABLED START -----*/
 
     //    Add your own code
-    //checkSocketState();
-    //if (!isSocketOn)  return;
-
-    //if(!ifStateIsOnOrMoving()) check_psstate();
     check_psstate();
 
     chargingOnOrOff(CHARGINGOFFCOMM);
@@ -646,20 +603,12 @@ Tango::DevUShort PowerSupply_701C::check_adc_output()
     /*----- PROTECTED REGION ID(PowerSupply_701C::check_adc_output) ENABLED START -----*/
 
     //    Add your own code
-    //checkSocketState();
-    //if (!isSocketOn)  return 65535;
 
     if(!ifStateIsOnOrMoving()) check_psstate();
 
     // timeout??? for device
 
     try { // if isActive || isExternalControl || isVoltageFromOutComp is false ???
-        //if (isActive && isExternalControl && isVoltageFromOutComp)
-        //if (isExternalControl && isVoltageFromOutComp)
-
-//        if (isExternalControl)
-//        {
-
             string reply = tangoSocket->toSocketWriteAndReadBinary(OUTPUTADC);
 
             if (reply.size()<2) {
@@ -699,8 +648,6 @@ Tango::DevUShort PowerSupply_701C::check_adc_output()
 
                     // ??? big-endian ?
                     char* instVolt = reinterpret_cast<char*>(&outVoltage);
-//                    instVolt[0]=replyVoltage[0];
-//                    instVolt[1]=replyVoltage[1];
                     instVolt[0]=replyVoltage[4]; // ???
                     instVolt[1]=replyVoltage[3]; // ???
                     DEBUG_STREAM << "Reply Voltage:" << outVoltage << endl;
@@ -862,83 +809,6 @@ Tango::DevState PowerSupply_701C::dev_state()
     return Tango::DeviceImpl::dev_state();
 }
 
-//void PowerSupply_701C::checkPSState()
-//{
-//    try
-//    {
-//        DEBUG_STREAM << "checkPSState()" <<  endl;
-////        socketProxy->ping();
-
-//        string reply,replyStatus;
-
-//        reply = tangoSocket->toSocketWriteAndReadBinary(CHECKPSSTATE);
-
-//        if (reply.size()<2) {
-//            DEBUG_STREAM << "Reply is incorrect. " << endl;
-//            set_state(Tango::FAULT);
-//            set_status("Reply is incorrect. reply.size<2");
-//            return;
-//        }
-
-//        DEBUG_STREAM << "checkPSState_Reply:" << reply << endl;
-//        char errorbyte,statebyte;
-//        DEBUG_STREAM << "Request size: " << reply.size() << endl;
-
-//        //string stateStr = {reply[0],reply[1]};
-//        string stateStr;
-//        stateStr.push_back(reply[0]); stateStr.push_back(reply[1]);
-
-//        if (stateStr==OK)
-//        {
-//            char checkSum;
-//            std::copy(reply.begin()+2,reply.end(),std::back_inserter(replyStatus));
-
-//            if (replyStatus.size()<6) {
-//                DEBUG_STREAM << "Reply is incorrect " << endl;
-//                set_state(Tango::FAULT);
-//                set_status("Reply is incorrect. (replyVoltage)");
-//                return;
-//            }
-//            if (replyStatus[0]='!')
-//            {
-//                checkSum = calcCheckSum(replyStatus.substr(0,5));
-//                if (checkSum != replyStatus[5])
-//                {
-//                    DEBUG_STREAM << "Checksum of reply is incorrect " << endl;
-//                    set_state(Tango::FAULT);
-//                    set_status("Checksum is incorrect");
-//                    return;
-//                }
-
-//                statebyte = replyStatus[3];
-//                errorbyte = replyStatus[4];
-//                // ??? check statebyte & errorbyte
-//                checkStateByte(statebyte);
-//                checkErrorByte(errorbyte);
-//            }
-//        }
-//        else if (reply[0]=='E')
-//        {
-//            // process
-//            errorReply(stateStr);
-//        }
-
-//#ifdef __unix__
-//        usleep(300);
-//#else
-//        Sleep(300); // for serialport
-//#endif
-
-//    }
-//    catch (Tango::DevFailed &e)
-//    {
-//        DEBUG_STREAM << "checkPSState() - ConnectionFailed " << endl;
-//        Tango::Except::print_exception(e);
-//        set_state(Tango::FAULT);
-//        set_status("Can't connect to socket " + socket);
-//    }
-//}
-
 void PowerSupply_701C::errorReply(string ERROR)
 {
     if (ERROR==ERR0) {
@@ -1051,17 +921,6 @@ void PowerSupply_701C::checkStateByte(char byte)
                 set_state(Tango::RUNNING);
                 set_status("Charging capacitor");
             }
-//                chargingOnOrOff(CHARGINGOFFCOMM);  // timeout??? for device
-//                if (!attr_isActive_read[0]) {
-//                    set_state(Tango::ON);
-//                    set_status("Device is ON. Voltage matches to given");
-//                    INFO_STREAM << " Capacitor is charged on " << device_name << endl;
-//                }
-//            }
-//            else {
-//                set_state(Tango::RUNNING);
-//                set_status("Charging capacitor");
-//            }
         }
         else {
             set_state(Tango::ON);
@@ -1080,9 +939,6 @@ bool PowerSupply_701C::ifStateIsOnOrMoving()
 {
     Tango::DevState Stt = get_state();
     return (Stt == Tango::ON || Stt == Tango::RUNNING) ? true : false;
-//    bool aaa = (Stt == Tango::ON || Stt == Tango::RUNNING) ? true : false;
-//    DEBUG_STREAM << "ifStateIsOnOrMoving():" << Stt << endl;
-//    return aaa;
 }
 
 void PowerSupply_701C::chargingOnOrOff(string command)
