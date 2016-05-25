@@ -676,7 +676,7 @@ Tango::DevUShort PowerSupply_701C::check_adc_output()
 
             if (stateStr==OK)
             {
-                Tango::DevShort outVoltage;
+                Tango::DevUShort outVoltage;
                 char checkSum;
                 std::copy(reply.begin()+2,reply.end(),std::back_inserter(replyVoltage));
 
